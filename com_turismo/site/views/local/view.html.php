@@ -10,7 +10,6 @@ class TurismoSiteViewLocal extends JViewLegacy
         $this->pagination = $this->get('Pagination');
 
         // Importar Bootstrap e jQuery
-        $document = JFactory::getDocument();
         echo JHtml::_('bootstrap.framework');
         echo JHtml::_('jquery.framework');
         HTMLHelper::_('bootstrap.tooltip');

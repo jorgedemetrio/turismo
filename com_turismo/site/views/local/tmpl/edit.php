@@ -25,6 +25,14 @@ $document->addScript(JURI::base() . 'media/com_turismo/js/local_edit.js?v='.time
 
     <div id="campos_adicionais" style="display: none;">
         <div class="mb-3">
+            <label for="cep" class="form-label"><?php echo JText::_('COM_TURISMO_CEP'); ?> *</label>
+            <input type="text" class="form-control" name="cep" value="<?php echo $this->item->cep; ?>" required />
+            <div class="invalid-feedback">
+                <?php echo JText::_('COM_TURISMO_CEP_OBRIGATORIO'); ?>
+            </div>
+        </div>
+
+        <div class="mb-3">
             <label for="nome" class="form-label"><?php echo JText::_('COM_TURISMO_NOME'); ?> *</label>
             <input type="text" class="form-control" name="nome" value="<?php echo $this->item->nome; ?>" required />
         </div>
@@ -32,14 +40,6 @@ $document->addScript(JURI::base() . 'media/com_turismo/js/local_edit.js?v='.time
         <div class="mb-3">
             <label for="cnpj" class="form-label"><?php echo JText::_('COM_TURISMO_CNPJ'); ?></label>
             <input type="text" class="form-control" name="cnpj" value="<?php echo $this->item->cnpj; ?>" />
-        </div>
-
-        <div class="mb-3">
-            <label for="cep" class="form-label"><?php echo JText::_('COM_TURISMO_CEP'); ?> *</label>
-            <input type="text" class="form-control" name="cep" value="<?php echo $this->item->cep; ?>" required />
-            <div class="invalid-feedback">
-                <?php echo JText::_('COM_TURISMO_CEP_OBRIGATORIO'); ?>
-            </div>
         </div>
 
         <div class="mb-3">
@@ -100,3 +100,4 @@ $document->addScript(JURI::base() . 'media/com_turismo/js/local_edit.js?v='.time
         </div>
     </div>
 </div>
+

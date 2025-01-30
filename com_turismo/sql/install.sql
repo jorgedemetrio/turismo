@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_tipo_local` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Criação da tabela de locais
+-- Criação da seria itabela de locais
 CREATE TABLE IF NOT EXISTS `#__turismo_locais` (
     `id` CHAR(36) NOT NULL,
     `nome` VARCHAR(250) NOT NULL,
@@ -54,6 +54,41 @@ CREATE TABLE IF NOT EXISTS `#__turismo_locais` (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`cidade_id`) REFERENCES `#__turismo_cidades`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Criação da tabela de quartos
+CREATE TABLE IF NOT EXISTS `#__turismo_quartos` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `quantidade_pessoas` INT(11) NOT NULL,
+    `valor` DECIMAL(10,2) NOT NULL,
+    `quantidade_disponiveis` INT(11) NOT NULL,
+    `tamanho` VARCHAR(50),
+    `local_id` CHAR(36) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Criação da tabela de recursos de quartos
+CREATE TABLE IF NOT EXISTS `#__turismo_recursos_quarto` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(250) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Criação da tabela associativa de quartos e recursos
+CREATE TABLE IF NOT EXISTS `#__turismo_quarto_recurso` (
+    `quarto_id` INT(11) NOT NULL,
+    `recurso_id` INT(11) NOT NULL,
+    PRIMARY KEY (`quarto_id`, `recurso_id`),
+    FOREIGN KEY (`quarto_id`) REFERENCES `#__turismo_quartos`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`recurso_id`) REFERENCES `#__turismo_recursos_quarto`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+
+
 
 -- Criação da tabela de cardápios
 CREATE TABLE IF NOT EXISTS `#__turismo_cardapio` (
@@ -146,6 +181,40 @@ CREATE TABLE IF NOT EXISTS `#__turismo_badwords` (
     `palavra` VARCHAR(100) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+-- Inserir recursos de quartos
+INSERT INTO `#__turismo_recursos_quarto` (`nome`) VALUES
+('Banheira'),
+('Ar condicionado'),
+('Jacu'),
+('Piscina'),
+('Vista para praia'),
+('Garagem'),
+('Wifi Incluso'),
+('Wifi'),
+('Aceita animais'),
+('Sacada'),
+('Academia'),
+('Cabelereiro'),
+('Restaurante'),
+('Cozinha privativa'),
+('TV'),
+('Frigobar'),
+('Cofre'),
+('Serviço de quarto'),
+('Serviço de streaming'),
+('Produtos de higiene pessoal gratuitos'),
+('Roupa de cama'),
+('Toalhas'),
+('Mesa de trabalho'),
+('Cowork'),
+('Aquecimento'),
+('Lareira'),
+('Secador de cabelo');
+
+
 
 -- Inserir estados
 INSERT INTO `#__turismo_estados` (`nome`) VALUES

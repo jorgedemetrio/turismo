@@ -1,6 +1,10 @@
 <?php
 defined('_JEXEC') or die;
 
+// Importar o JavaScript de consulta
+$document = JFactory::getDocument();
+$document->addScript(JURI::base() . 'media/com_turismo/js/consulta_local.js?v='.time());
+
 // Exibir a lista de locais
 ?>
 <h1><?php echo JText::_('COM_TURISMO_LISTA_DE_LOCAIS'); ?></h1>
@@ -14,9 +18,9 @@ defined('_JEXEC') or die;
     <label for="filter_tipo"><?php echo JText::_('COM_TURISMO_FILTRO_TIPO'); ?>:</label>
     <select name="filter_tipo">
         <option value=""><?php echo JText::_('COM_TURISMO_SELECIONE'); ?></option>
-        <option value="1"><?php echo JText::_('COM_TURISMO_HOTEIS'); ?></option>
-        <option value="2"><?php echo JText::_('COM_TURISMO_RESTAURANTES'); ?></option>
-        <!-- Adicionar outros tipos -->
+        <?php foreach ($this->tipos as $tipo): ?>
+            <option value="<?php echo $tipo->id; ?>"><?php echo $tipo->nome; ?></option>
+        <?php endforeach; ?>
     </select>
     
     <input type="submit" value="<?php echo JText::_('COM_TURISMO_BUSCAR'); ?>" />
@@ -37,7 +41,7 @@ defined('_JEXEC') or die;
         <tr>
             <td><?php echo $item->id; ?></td>
             <td><?php echo $item->nome; ?></td>
-            <td><?php echo $item->id_tipo_local; // Aqui você deve buscar o nome do tipo de local ?></td>
+            <td><?php echo $item->tipo_local; ?></td>
             <td><?php echo $item->media_avaliacoes; ?></td>
             <td>
                 <a href="<?php echo JRoute::_('index.php?option=com_turismo&task=local.detail&id=' . $item->id); ?>"><?php echo JText::_('COM_TURISMO_VER_DETALHES'); ?></a>
