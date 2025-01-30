@@ -117,7 +117,7 @@ class TurismoSiteControllerLocal extends JControllerBase
         // Lógica para salvar os dados do local
         // ...
         
-        $app->enqueueMessage(JText::_('COM_TURISMO_CADASTRO_SUCESSO'), 'message');
+        $this->redirectBasedOnType($data['tipo']);
         $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local', false));
     }
 
