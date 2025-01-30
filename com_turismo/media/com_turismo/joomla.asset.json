@@ -1,0 +1,43 @@
+{
+    "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+    "name": "com_turismo",
+    "version": "1.0.0",
+    "description": "Turismo Component Assets",
+    "license": "GNU General Public License version 2 or later",
+    "assets": [
+        {
+            "name": "com_turismo.admin",
+            "type": "style",
+            "uri": "com_turismo/admin.css"
+        },
+        {
+            "name": "com_turismo.site",
+            "type": "style",
+            "uri": "com_turismo/site.css"
+        },
+        {
+            "name": "com_turismo.admin",
+            "type": "script",
+            "uri": "com_turismo/admin.js",
+            "dependencies": [
+                "core",
+                "bootstrap"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_turismo.site",
+            "type": "script",
+            "uri": "com_turismo/site.js",
+            "dependencies": [
+                "core",
+                "bootstrap"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        }
+    ]
+}

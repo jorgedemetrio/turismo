@@ -19,10 +19,20 @@ CREATE TABLE IF NOT EXISTS `#__turismo_tipo_local` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(250) NOT NULL,
     `estabelecimento` TINYINT(1) DEFAULT 1,
-    PRIMARY KEY (`id`)
+    `catid` INT(11) NOT NULL,
+    `state` TINYINT(3) NOT NULL DEFAULT 1,
+    `ordering` INT(11) NOT NULL DEFAULT 0,
+    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by` INT(11) NOT NULL,
+    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `modified_by` INT(11),
+    `checked_out` INT(11),
+    `checked_out_time` DATETIME,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`catid`) REFERENCES `#__categories`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Criação da seria itabela de locais
+-- Criação da tabela de locais
 CREATE TABLE IF NOT EXISTS `#__turismo_locais` (
     `id` CHAR(36) NOT NULL,
     `nome` VARCHAR(250) NOT NULL,
@@ -83,13 +93,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_quarto_recurso` (
     FOREIGN KEY (`quarto_id`) REFERENCES `#__turismo_quartos`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`recurso_id`) REFERENCES `#__turismo_recursos_quarto`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-
-
-
-
 
 -- Criação da tabela de cardápios
 CREATE TABLE IF NOT EXISTS `#__turismo_cardapio` (
@@ -183,8 +186,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_badwords` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
 -- Inserir recursos de quartos
 INSERT INTO `#__turismo_recursos_quarto` (`nome`) VALUES
 ('Banheira'),
@@ -215,58 +216,58 @@ INSERT INTO `#__turismo_recursos_quarto` (`nome`) VALUES
 ('Lareira'),
 ('Secador de cabelo');
 
-
-
 -- Inserir estados
-INSERT INTO `#__turismo_estados` (`nome`) VALUES
-('Acre'),
-('Alagoas'),
-('Amapá'),
-('Amazonas'),
-('Bahia'),
-('Ceará'),
-('Distrito Federal'),
-('Espírito Santo'),
-('Goiás'),
-('Maranhão'),
-('Mato Grosso'),
-('Mato Grosso do Sul'),
-('Minas Gerais'),
-('Pará'),
-('Paraíba'),
-('Paraná'),
-('Pernambuco'),
-('Piauí'),
-('Rio de Janeiro'),
-('Rio Grande do Norte'),
-('Rio Grande do Sul'),
-('Rondônia'),
-('Roraima'),
-('Santa Catarina'),
-('São Paulo'),
-('Sergipe'),
-('Tocantins');
+INSERT INTO `#__turismo_estados` (`uf`, `nome`) VALUES
+('AC', 'Acre'),
+('AL', 'Alagoas'),
+('AP', 'Amapá'),
+('AM', 'Amazonas'),
+('BA', 'Bahia'),
+('CE', 'Ceará'),
+('DF', 'Distrito Federal'),
+('ES', 'Espírito Santo'),
+('GO', 'Goiás'),
+('MA', 'Maranhão'),
+('MT', 'Mato Grosso'),
+('MS', 'Mato Grosso do Sul'),
+('MG', 'Minas Gerais'),
+('PA', 'Pará'),
+('PB', 'Paraíba'),
+('PR', 'Paraná'),
+('PE', 'Pernambuco'),
+('PI', 'Piauí'),
+('RJ', 'Rio de Janeiro'),
+('RN', 'Rio Grande do Norte'),
+('RS', 'Rio Grande do Sul'),
+('RO', 'Rondônia'),
+('RR', 'Roraima'),
+('SC', 'Santa Catarina'),
+('SP', 'São Paulo'),
+('SE', 'Sergipe'),
+('TO', 'Tocantins');
 
--- Inserir tipos de estabelecimento
-INSERT INTO `#__turismo_tipos_estabelecimento` (`id`,`nome`,`estabelecimento`) VALUES
-(1,'Restaurante', 1),
-(2,'Hotel', 1),
-(3,'Pousada', 1),
-(4,'Bar', 1),
-(5,'Café', 1),
-(6,'Loja de Souvenirs', 1),
-(7,'Agência de Viagens', 1),
-(8,'Praças', 0),
-(9,'Parques', 0),
-(10,'Ponto Turístico', 0),
-(11,'Balada', 1),
-(12,'Museus', 1),
-(13,'Eventos', 1),
-(14,'Zoológico', 1),
-(15,'Parque de eletrônico', 1),
-(16,'Parque Aquatico', 1),
-(17,'Cinema', 1),
-(18,'Shopping', 1),
-(19,'Biblioteca', 1);
+-- Criar categoria raiz para tipos de locais se não existir
+INSERT IGNORE INTO `#__categories` (`extension`, `title`, `alias`, `description`, `published`, `access`, `params`, `metadesc`, `metakey`, `metadata`, `created_time`, `modified_time`, `hits`, `language`, `version`)
+VALUES ('com_turismo', 'Tipos de Locais', 'tipos-de-locais', 'Categoria raiz para tipos de locais turísticos', 1, 1, '{"category_layout":"","image":""}', '', '', '{"author":"","robots":""}', NOW(), NOW(), 0, '*', 1);
 
-
+-- Inserir tipos de estabelecimento vinculados às categorias
+INSERT INTO `#__turismo_tipo_local` (`nome`, `estabelecimento`, `catid`, `created_by`, `state`) VALUES
+('Restaurante', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Hotel', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Pousada', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Bar', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Café', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Loja de Souvenirs', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Agência de Viagens', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Praças', 0, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Parques', 0, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Ponto Turístico', 0, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Balada', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Museus', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Eventos', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Zoológico', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Parque de eletrônico', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Parque Aquatico', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Cinema', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Shopping', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Biblioteca', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1);
