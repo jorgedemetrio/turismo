@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_cidades` (
 CREATE TABLE IF NOT EXISTS `#__turismo_tipo_local` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(250) NOT NULL,
+    `estabelecimento` TINYINT(1) DEFAULT 1,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -247,11 +248,25 @@ INSERT INTO `#__turismo_estados` (`nome`) VALUES
 ('Tocantins');
 
 -- Inserir tipos de estabelecimento
-INSERT INTO `#__turismo_tipos_estabelecimento` (`nome`) VALUES
-('Restaurante'),
-('Hotel'),
-('Pousada'),
-('Bar'),
-('Café'),
-('Loja de Souvenirs'),
-('Agência de Viagens');
+INSERT INTO `#__turismo_tipos_estabelecimento` (`id`,`nome`,`estabelecimento`) VALUES
+(1,'Restaurante', 1),
+(2,'Hotel', 1),
+(3,'Pousada', 1),
+(4,'Bar', 1),
+(5,'Café', 1),
+(6,'Loja de Souvenirs', 1),
+(7,'Agência de Viagens', 1),
+(8,'Praças', 0),
+(9,'Parques', 0),
+(10,'Ponto Turístico', 0),
+(11,'Balada', 1),
+(12,'Museus', 1),
+(13,'Eventos', 1),
+(14,'Zoológico', 1),
+(15,'Parque de eletrônico', 1),
+(16,'Parque Aquatico', 1),
+(17,'Cinema', 1),
+(18,'Shopping', 1),
+(19,'Biblioteca', 1);
+
+

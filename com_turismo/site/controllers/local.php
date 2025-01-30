@@ -77,12 +77,6 @@ class TurismoSiteControllerLocal extends JControllerBase
         $app = JFactory::getApplication();
         $data = $app->input->getPost();
 
-        // Validação dos campos obrigatórios
-        if (empty($data['nome']) || empty($data['cep']) || empty($data['endereco']) || empty($data['numero']) || empty($data['bairro'])) {
-            $app->enqueueMessage(JText::_('COM_TURISMO_CAMPOS_OBRIGATORIOS'), 'error');
-            $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro', false));
-            return;
-        }
 
         // Validação do token
         if (!JSession::checkToken('request')) {
@@ -97,6 +91,14 @@ class TurismoSiteControllerLocal extends JControllerBase
             $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro', false));
             return;
         }
+
+        // Validação dos campos obrigatórios
+        if (empty($data['nome']) || empty($data['cep']) || empty($data['endereco']) || empty($data['numero']) || empty($data['bairro'])) {
+            $app->enqueueMessage(JText::_('COM_TURISMO_CAMPOS_OBRIGATORIOS'), 'error');
+            $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro', false));
+            return;
+        }
+        
 
         // Validação do CNPJ
         if (!empty($data['cnpj'])) {
@@ -114,11 +116,173 @@ class TurismoSiteControllerLocal extends JControllerBase
             }
         }
 
-        // Lógica para salvar os dados do local
-        // ...
+        // Capturar informações do usuário
+        $userId = JFactory::getUser()->id;
+        $ipUsuario = $_SERVER['REMOTE_ADDR'];
+        $ipProxy = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '';
+
         
-        $this->redirectBasedOnType($data['tipo']);
+
+
+        // Lógica para salvar os dados do local
+        $db = JFactory::getDbo();
+
+
+		$query = $db->getQuery ( true );
+        $query->select(' UUID() as ID ')
+            ->from(' DUAL ')
+            ->setLimit(1);
+        $db->setQuery ( $query );
+        $uuid = $db->loadObject()->ID;
+
+
+        $query = $db->getQuery(true);
+        $query->insert($db->quoteName('#__turismo_locais'))
+              ->columns($db->quoteName(array('id','nome', 'cep', 'endereco', 'numero', 'bairro', 'id_user_criador', 'ip_usuario', 'ip_proxy')))
+              ->values($db->quote($uuid) . ', '
+                . $db->quote($data['nome']) . ', '
+                . $db->quote($data['cep']) . ', '
+                . $db->quote($data['endereco']) . ', '
+                . $db->quote($data['numero']) . ', '
+                . $db->quote($data['bairro']) . ', ' 
+                . $db->quote($userId) . ', ' 
+                . $db->quote($ipUsuario) . ', ' 
+                . $db->quote($ipProxy));
+        $db->setQuery($query);
+        $db->execute();
+
+        $this->redirectBasedOnType($data['tipo'], $uuid);
         $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local', false));
+
+
+        
+    }
+
+    public function redirectBasedOnType($type, $uuid)
+    {
+        switch ($type) {
+            //Ramo de Hospedagem
+            case 2:
+            case 3:
+                $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_quartos&id='.$uuid, false));
+                break;
+            //Ramo de Alimenticios
+            case 1:
+            case 4:
+            case 5:
+                $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_quartos&id='.$uuid, false));
+                break;
+            //Outros Ramos
+            default:
+                $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&id='.$uuid, false));
+                break;
+        }
+        $this->redirect();
+    }
+
+    public function saveQuarto()
+    {
+        $app = JFactory::getApplication();
+        $data = $app->input->getPost();
+
+        // Validação dos campos obrigatórios
+        if (empty($data['nome']) || empty($data['descricao']) || empty($data['preco'])) {
+            $app->enqueueMessage(JText::_('COM_TURISMO_CAMPOS_OBRIGATORIOS'), 'error');
+            $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_quartos', false));
+            return;
+        }
+
+        // Lógica para salvar os dados do quarto
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->insert($db->quoteName('#__turismo_quartos'))
+              ->columns($db->quoteName(array('nome', 'descricao', 'preco')))
+              ->values($db->quote($data['nome']) . ', ' . $db->quote($data['descricao']) . ', ' . $db->quote($data['preco']));
+        $db->setQuery($query);
+        $db->execute();
+
+        $app->enqueueMessage(JText::_('COM_TURISMO_QUARTO_CADASTRADO_COM_SUCESSO'), 'message');
+        $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_quartos', false));
+    }
+
+    public function editQuarto($id)
+    {
+        $app = JFactory::getApplication();
+        $data = $app->input->getPost();
+
+        // Validação dos campos obrigatórios
+        if (empty($data['nome']) || empty($data['descricao']) || empty($data['preco'])) {
+            $app->enqueueMessage(JText::_('COM_TURISMO_CAMPOS_OBRIGATORIOS'), 'error');
+            $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_quartos&id=' . $id, false));
+            return;
+        }
+
+        // Lógica para editar os dados do quarto
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__turismo_quartos'))
+              ->set($db->quoteName('nome') . ' = ' . $db->quote($data['nome']))
+              ->set($db->quoteName('descricao') . ' = ' . $db->quote($data['descricao']))
+              ->set($db->quoteName('preco') . ' = ' . $db->quote($data['preco']))
+              ->where($db->quoteName('id') . ' = ' . (int) $id);
+        $db->setQuery($query);
+        $db->execute();
+
+        $app->enqueueMessage(JText::_('COM_TURISMO_QUARTO_EDITADO_COM_SUCESSO'), 'message');
+        $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_quartos', false));
+    }
+
+    public function removeQuarto($id)
+    {
+        $app = JFactory::getApplication();
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->delete($db->quoteName('#__turismo_quartos'))
+              ->where($db->quoteName('id') . ' = ' . (int) $id);
+        $db->setQuery($query);
+        $db->execute();
+
+        $app->enqueueMessage(JText::_('COM_TURISMO_QUARTO_REMOVIDO_COM_SUCESSO'), 'message');
+        $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_quartos', false));
+    }
+
+    public function saveCardapio()
+    {
+        $app = JFactory::getApplication();
+        $data = $app->input->getPost();
+
+        // Validação dos campos obrigatórios
+        if (empty($data['nome']) || empty($data['descricao']) || empty($data['preco'])) {
+            $app->enqueueMessage(JText::_('COM_TURISMO_CAMPOS_OBRIGATORIOS'), 'error');
+            $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_cardapio', false));
+            return;
+        }
+
+        // Lógica para salvar os dados do cardápio
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->insert($db->quoteName('#__turismo_cardapio'))
+              ->columns($db->quoteName(array('nome', 'descricao', 'preco')))
+              ->values($db->quote($data['nome']) . ', ' . $db->quote($data['descricao']) . ', ' . $db->quote($data['preco']));
+        $db->setQuery($query);
+        $db->execute();
+
+        $app->enqueueMessage(JText::_('COM_TURISMO_ITEM_CADASTRADO_COM_SUCESSO'), 'message');
+        $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_cardapio', false));
+    }
+
+    public function removeCardapio($id)
+    {
+        $app = JFactory::getApplication();
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->delete($db->quoteName('#__turismo_cardapio'))
+              ->where($db->quoteName('id') . ' = ' . (int) $id);
+        $db->setQuery($query);
+        $db->execute();
+
+        $app->enqueueMessage(JText::_('COM_TURISMO_CARDAPIO_REMOVIDO_COM_SUCESSO'), 'message');
+        $this->setRedirect(JRoute::_('index.php?option=com_turismo&view=local&layout=cadastro_cardapio', false));
     }
 
     public function search()
