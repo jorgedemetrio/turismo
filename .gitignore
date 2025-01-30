@@ -1,3 +1,5 @@
+
+sonar.bat
 /.htaccess
 /administrator/cache/*
 /administrator/components/com_actionlogs/*
@@ -703,3 +705,6 @@
 /README.txt
 /robots.txt.dist
 /web.config.txt
+
+
+
