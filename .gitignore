@@ -1,6 +1,8 @@
 
 sonar.bat
-.scannerwork/**
+/.scannerwork
+/.scannerwork/*
+/.scannerwork/*
 /.htaccess
 /administrator/cache/*
 /administrator/components/com_actionlogs/*
