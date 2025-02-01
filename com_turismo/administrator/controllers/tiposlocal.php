@@ -1,186 +1,84 @@
 <?php
-/**
- * @package     Joomla.Administrator
- * @subpackage  com_turismo
- *
- * @copyright   Copyright (C) 2023 Todos os direitos reservados.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
+defined('_JEXEC') or die;
 
-defined('_JEXEC') or die('Restricted access');
-
-use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
-use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Helper\ContentHelper;
 
 /**
- * Controller para lista de Tipos de Local
+ * Controller para manipulação de tipos de locais
  *
  * @since  1.0.0
  */
-class TurismoControllerTiposLocal extends AdminController
+class TurismoControllerTiposLocal extends FormController
 {
-    /**
-     * Proxy para getModel
-     *
-     * @param   string  $name    O nome do modelo
-     * @param   string  $prefix  O prefixo do modelo
-     * @param   array   $config  Array de configuração
-     *
-     * @return  object  O modelo
-     *
-     * @since   1.0.0
-     */
-    public function getModel($name = 'TipoLocal', $prefix = 'TurismoModel', $config = array('ignore_request' => true))
+    protected $text_prefix = 'COM_TURISMO_TIPOSLOCAL';
+
+    public function getModel($name = 'TiposLocal', $prefix = 'TurismoModel', $config = array())
     {
         return parent::getModel($name, $prefix, $config);
     }
 
-    /**
-     * Método para salvar a ordenação
-     *
-     * @return  boolean  Resultado da operação
-     *
-     * @since   1.0.0
-     */
-    public function saveorder()
+    public function save($key = null, $urlVar = null)
     {
-        // Verificar token
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        // Lógica para salvar um novo tipo de local
+        $app = Factory::getApplication();
+        $input = $app->input;
 
-        $ids = $this->input->post->get('cid', array(), 'array');
-        $order = $this->input->post->get('order', array(), 'array');
+        // Obtém os dados do formulário
+        $data = $input->get('jform', array(), 'array');
 
-        // Sanitizar os arrays
-        $ids = ArrayHelper::toInteger($ids);
-        $order = ArrayHelper::toInteger($order);
+        // Validação de CNPJ e CEP
+        if (empty($data['cnpj']) || !preg_match('/^\d{14}$/', $data['cnpj'])) {
+            $app->enqueueMessage(Text::_('COM_TURISMO_ERRO_CNPJ_INVALIDO'), 'error');
+            return false;
+        }
 
+        if (empty($data['cep']) || !preg_match('/^\d{5}-\d{3}$/', $data['cep'])) {
+            $app->enqueueMessage(Text::_('COM_TURISMO_ERRO_CEP_INVALIDO'), 'error');
+            return false;
+        }
+
+        // Salvar os dados
         $model = $this->getModel();
-        $return = $model->saveorder($ids, $order);
-
-        if ($return)
-        {
-            echo "1";
+        if ($model->save($data)) {
+            $app->enqueueMessage(Text::_('COM_TURISMO_TIPOLOCAL_SALVO_COM_SUCESSO'), 'success');
+            $this->setRedirect('index.php?option=com_turismo&view=tipolocal');
+        } else {
+            $app->enqueueMessage(Text::_('COM_TURISMO_ERRO_SALVAR_TIPOLOCAL'), 'error');
+            $this->setRedirect('index.php?option=com_turismo&view=tipolocal&layout=edit&id=' . $data['id']);
         }
-
-        // Fechar a aplicação
-        Factory::getApplication()->close();
     }
 
-    /**
-     * Método para publicar/despublicar itens
-     *
-     * @return  void
-     *
-     * @since   1.0.0
-     */
-    public function publish()
+    public function delete($key = 'id')
     {
-        // Verificar token
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        // Lógica para remover um tipo de local
+        $app = Factory::getApplication();
+        $model = $this->getModel();
 
-        // Obter itens selecionados
-        $ids = $this->input->get('cid', array(), 'array');
-        $values = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
-        $task = $this->getTask();
-        $value = ArrayHelper::getValue($values, $task, 0, 'int');
+        // Obtém o ID do tipo de local a ser removido
+        $ids = $app->input->get('cid', array(), 'array');
 
-        if (empty($ids))
-        {
-            $this->setMessage(Text::_('JERROR_NO_ITEMS_SELECTED'), 'warning');
-        }
-        else
-        {
-            // Obter o modelo e tentar mudar o estado
-            $model = $this->getModel();
-            $ids = ArrayHelper::toInteger($ids);
-
-            // Publicar os itens
-            try
-            {
-                $model->publish($ids, $value);
-                $errors = $model->getErrors();
-                $ntext = null;
-
-                if ($value === 1)
-                {
-                    $ntext = 'COM_TURISMO_N_ITEMS_PUBLISHED';
-                }
-                elseif ($value === 0)
-                {
-                    $ntext = 'COM_TURISMO_N_ITEMS_UNPUBLISHED';
-                }
-                elseif ($value === 2)
-                {
-                    $ntext = 'COM_TURISMO_N_ITEMS_ARCHIVED';
-                }
-
-                if (count($errors) == 0)
-                {
-                    $this->setMessage(Text::plural($ntext, count($ids)));
-                }
-                else
-                {
-                    $this->setMessage(Text::plural($ntext . '_ERROR', count($ids), implode('<br />', $errors)), 'error');
-                }
-            }
-            catch (\Exception $e)
-            {
-                $this->setMessage($e->getMessage(), 'error');
-            }
+        if (empty($ids)) {
+            $app->enqueueMessage(Text::_('COM_TURISMO_ERRO_SELECIONE_TIPOSLOCAL'), 'error');
+            return false;
         }
 
-        $this->setRedirect(Route::_('index.php?option=com_turismo&view=tiposlocal', false));
+        // Remove os tipos de locais
+        if ($model->delete($ids)) {
+            $app->enqueueMessage(Text::_('COM_TURISMO_TIPOSLOCAL_REMOVIDO_COM_SUCESSO'), 'success');
+        } else {
+            $app->enqueueMessage(Text::_('COM_TURISMO_ERRO_REMOVER_TIPOSLOCAL'), 'error');
+        }
+
+        $this->setRedirect('index.php?option=com_turismo&view=tiposlocal');
     }
 
-    /**
-     * Método para excluir itens
-     *
-     * @return  void
-     *
-     * @since   1.0.0
-     */
-    public function delete()
+    public function cancel($key = 'id')
     {
-        // Verificar token
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
-
-        // Obter itens selecionados
-        $ids = $this->input->get('cid', array(), 'array');
-
-        if (empty($ids))
-        {
-            $this->setMessage(Text::_('JERROR_NO_ITEMS_SELECTED'), 'warning');
-        }
-        else
-        {
-            // Obter o modelo e tentar deletar
-            $model = $this->getModel();
-            $ids = ArrayHelper::toInteger($ids);
-
-            // Remover os itens
-            try
-            {
-                $model->delete($ids);
-                $errors = $model->getErrors();
-
-                if (count($errors) == 0)
-                {
-                    $this->setMessage(Text::plural('COM_TURISMO_N_ITEMS_DELETED', count($ids)));
-                }
-                else
-                {
-                    $this->setMessage(Text::plural('COM_TURISMO_N_ITEMS_DELETED_ERROR', count($ids), implode('<br />', $errors)), 'error');
-                }
-            }
-            catch (\Exception $e)
-            {
-                $this->setMessage($e->getMessage(), 'error');
-            }
-        }
-
-        $this->setRedirect(Route::_('index.php?option=com_turismo&view=tiposlocal', false));
+        // Lógica para cancelar a operação
+        $this->setRedirect('index.php?option=com_turismo&view=tiposlocal');
     }
 }

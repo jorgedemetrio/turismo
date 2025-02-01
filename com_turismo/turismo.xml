@@ -1,95 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="4.0" method="upgrade">
-    <name>COM_TURISMO</name>
-    <creationDate>2023-11</creationDate>
+<extension type="component" method="upgrade">
+    <name>com_turismo</name>
     <author>Jorge Demetrio</author>
-    <authorEmail>jorge.demetrio@aluno.ifsp.edu.br</authorEmail>
-    <authorUrl>https://github.com/jorgedemetrio</authorUrl>
-    <copyright>(C) 2023 Todos os direitos reservados.</copyright>
+    <creationDate>Janeiro 2025</creationDate>
+    <copyright>(C) 2025 Todos os direitos reservados.</copyright>
     <license>GNU General Public License version 2 or later;</license>
+    <authorEmail>jorge.demetrio@gmail.com</authorEmail>
+    <authorUrl>https://github.com/jorgedemetrio</authorUrl>
     <version>1.0.0</version>
     <description>COM_TURISMO_XML_DESCRIPTION</description>
-
-    <scriptfile>script.php</scriptfile>
+    <namespace path="src">JorgeDemetrio\Component\Turismo</namespace>
 
     <install>
         <sql>
             <file driver="mysql" charset="utf8">sql/install.sql</file>
         </sql>
     </install>
-    
     <uninstall>
         <sql>
             <file driver="mysql" charset="utf8">sql/uninstall.sql</file>
         </sql>
     </uninstall>
-
-    <!-- Executa na atualização -->
     <update>
         <schemas>
             <schemapath type="mysql">sql/updates/mysql</schemapath>
         </schemas>
     </update>
 
-    <!-- Arquivos de mídia -->
-    <media folder="media/com_turismo" destination="com_turismo">
-        <folder>css</folder>
-        <folder>images</folder>
-        <folder>js</folder>
-        <folder>webfonts</folder>
-    </media>
     <files folder="site">
-        <folder>controllers</folder>
+        <folder>forms</folder>
+        <folder>language</folder>
+        <folder>layouts</folder>
+        <folder>src</folder>
+        <folder>tmpl</folder>
         <folder>models</folder>
+        <folder>controllers</folder>
         <folder>views</folder>
-        <filename>turismo.php</filename>
-        <filename>controller.php</filename>
-        <filename>router.php</filename>
     </files>
 
-    <languages folder="language">
-        <language tag="pt-BR">pt-BR/pt-BR.com_turismo.ini</language>
+    <media destination="com_turismo" folder="media">
+        <filename>joomla.asset.json</filename>
+        <folder>css</folder>
+        <folder>js</folder>
+        <folder>images</folder>
+    </media>
+
+    <languages folder="site/language">
         <language tag="en-GB">en-GB/en-GB.com_turismo.ini</language>
+        <language tag="pt-BR">pt-BR/pt-BR.com_turismo.ini</language>
         <language tag="es-ES">es-ES/es-ES.com_turismo.ini</language>
     </languages>
 
     <administration>
-        <menu img="class:generic">COM_TURISMO_MENU</menu>
+        <menu>COM_TURISMO</menu>
         <submenu>
-            <menu link="option=com_turismo&amp;view=tiposlocal" view="tiposlocal" img="class:generic" alt="Turismo/Tipos de Local">COM_TURISMO_MENU_TIPOS</menu>
-            <menu link="option=com_turismo&amp;view=locais" view="locais" img="class:generic" alt="Turismo/Locais">COM_TURISMO_MENU_LOCAIS</menu>
-            <menu link="option=com_turismo&amp;view=avaliacoes" view="avaliacoes" img="class:generic" alt="Turismo/Avaliações">COM_TURISMO_MENU_AVALIACOES</menu>
-            <menu link="option=com_categories&amp;extension=com_turismo" view="categories" img="class:generic" alt="Turismo/Categorias">COM_TURISMO_CATEGORIES</menu>
+            <menu link="option=com_turismo&amp;view=locais">COM_TURISMO_MENU_LOCAIS</menu>
+            <menu link="option=com_turismo&amp;view=tipos">COM_TURISMO_MENU_TIPOS</menu>
+            <menu link="option=com_turismo&amp;view=avaliacoes">COM_TURISMO_MENU_AVALIACOES</menu>
+            <menu link="option=com_turismo&amp;view=categorias">COM_TURISMO_MENU_CATEGORIAS</menu>
         </submenu>
 
         <files folder="administrator">
-            <folder>controllers</folder>
-            <folder>models</folder>
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <folder>forms</folder>
+            <folder>language</folder>
+            <folder>layouts</folder>
+            <folder>services</folder>
             <folder>sql</folder>
-            <folder>tables</folder>
+            <folder>src</folder>
+            <folder>tmpl</folder>
+            <folder>models</folder>
+            <folder>controllers</folder>
             <folder>views</folder>
             <filename>access.xml</filename>
             <filename>config.xml</filename>
-            <filename>turismo.php</filename>
-            <filename>controller.php</filename>
         </files>
 
         <languages folder="administrator/language">
-            <language tag="pt-BR">pt-BR/pt-BR.com_turismo.ini</language>
-            <language tag="pt-BR">pt-BR/pt-BR.com_turismo.sys.ini</language>
             <language tag="en-GB">en-GB/en-GB.com_turismo.ini</language>
             <language tag="en-GB">en-GB/en-GB.com_turismo.sys.ini</language>
+            <language tag="pt-BR">pt-BR/pt-BR.com_turismo.ini</language>
+            <language tag="pt-BR">pt-BR/pt-BR.com_turismo.sys.ini</language>
             <language tag="es-ES">es-ES/es-ES.com_turismo.ini</language>
             <language tag="es-ES">es-ES/es-ES.com_turismo.sys.ini</language>
         </languages>
     </administration>
 
-        <!-- Dependências -->
-    <dependencies>
-        <dependency type="platform" name="joomla" version="4.4" />
-    </dependencies>
+    <config>
+        <fields name="params">
+            <fieldset name="component">
+                <field
+                    name="google_maps_key"
+                    type="text"
+                    label="COM_TURISMO_CONFIG_GOOGLE_MAPS_KEY_LABEL"
+                    description="COM_TURISMO_CONFIG_GOOGLE_MAPS_KEY_DESC"
+                />
+                </fieldset>
+                <field
+                    name="save_history"
+                    type="radio"
+                    label="JGLOBAL_SAVE_HISTORY_OPTIONS_LABEL"
+                    description="JGLOBAL_SAVE_HISTORY_OPTIONS_DESC"
+                    default="1"
+                    class="btn-group btn-group-yesno"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field
+                    name="history_limit"
+                    type="text"
+                    label="JGLOBAL_HISTORY_LIMIT_OPTIONS_LABEL"
+                    description="JGLOBAL_HISTORY_LIMIT_OPTIONS_DESC"
+                    default="10"
+                    filter="integer"
+                />
+            </fieldset>
+        </fields>
+    </config>
 
     <updateservers>
-        <server type="extension" priority="1" name="Turismo Update Site">https://www.sobieskiproducoes.com.br/updates/com_turismo.xml</server>
+        <server type="extension" priority="1" name="Turismo Updates">https://www.sobieskiproducoes.com.br/updates/com_turismo.xml</server>
     </updateservers>
+
+    <scriptfile>script.php</scriptfile>
+    
+    <dependencies>
+        <dependency type="platform" name="joomla" version="4.0" />
+        <dependency type="package" name="pkg_pt-BR">0</dependency>
+    </dependencies>
 </extension>

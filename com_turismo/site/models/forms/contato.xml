@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="contato">
+        <field
+            name="nome"
+            type="text"
+            label="COM_TURISMO_NOME"
+            description="COM_TURISMO_NOME_DESC"
+            class="form-control"
+            required="true"
+            filter="string"
+            maxlength="100"
+        />
+
+        <field
+            name="email"
+            type="email"
+            label="COM_TURISMO_EMAIL"
+            description="COM_TURISMO_EMAIL_DESC"
+            class="form-control"
+            required="true"
+            validate="email"
+            filter="email"
+            maxlength="100"
+        />
+
+        <field
+            name="telefone"
+            type="tel"
+            label="COM_TURISMO_TELEFONE"
+            description="COM_TURISMO_TELEFONE_DESC"
+            class="form-control telefone"
+            filter="string"
+            maxlength="15"
+        />
+
+        <field
+            name="mensagem"
+            type="textarea"
+            label="COM_TURISMO_MENSAGEM"
+            description="COM_TURISMO_MENSAGEM_DESC"
+            class="form-control"
+            required="true"
+            filter="safehtml"
+            rows="4"
+        />
+
+        <field
+            name="captcha"
+            type="captcha"
+            label="COM_TURISMO_CAPTCHA"
+            description="COM_TURISMO_CAPTCHA_DESC"
+            validate="captcha"
+            namespace=""
+        />
+    </fieldset>
+
+    <fieldset name="hidden">
+        <field
+            name="id"
+            type="hidden"
+        />
+
+        <field
+            name="return"
+            type="hidden"
+        />
+    </fieldset>
+</form>

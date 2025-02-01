@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <fieldset name="general" label="COM_TURISMO_CONFIG_GENERAL_LABEL" description="COM_TURISMO_CONFIG_GENERAL_DESC">
+        <field
+            name="google_maps_key"
+            type="text"
+            label="COM_TURISMO_CONFIG_GOOGLE_MAPS_KEY_LABEL"
+            description="COM_TURISMO_CONFIG_GOOGLE_MAPS_KEY_DESC"
+            size="50"
+        />
+        <field
+            name="default_lat"
+            type="text"
+            label="COM_TURISMO_CONFIG_DEFAULT_LAT_LABEL"
+            description="COM_TURISMO_CONFIG_DEFAULT_LAT_DESC"
+            default="-15.7801"
+        />
+        <field
+            name="default_lng"
+            type="text"
+            label="COM_TURISMO_CONFIG_DEFAULT_LNG_LABEL"
+            description="COM_TURISMO_CONFIG_DEFAULT_LNG_DESC"
+            default="-47.9292"
+        />
+        <field
+            name="default_zoom"
+            type="integer"
+            label="COM_TURISMO_CONFIG_DEFAULT_ZOOM_LABEL"
+            description="COM_TURISMO_CONFIG_DEFAULT_ZOOM_DESC"
+            first="1"
+            last="20"
+            step="1"
+            default="15"
+        />
+    </fieldset>
+
+    <fieldset name="images" label="COM_TURISMO_CONFIG_IMAGES_LABEL" description="COM_TURISMO_CONFIG_IMAGES_DESC">
+        <field
+            name="max_file_size"
+            type="integer"
+            label="COM_TURISMO_CONFIG_MAX_FILE_SIZE_LABEL"
+            description="COM_TURISMO_CONFIG_MAX_FILE_SIZE_DESC"
+            first="1"
+            last="10"
+            step="1"
+            default="5"
+            suffix="MB"
+        />
+        <field
+            name="allowed_extensions"
+            type="text"
+            label="COM_TURISMO_CONFIG_ALLOWED_EXTENSIONS_LABEL"
+            description="COM_TURISMO_CONFIG_ALLOWED_EXTENSIONS_DESC"
+            default="jpg,jpeg,png,gif"
+        />
+        <field
+            name="thumbnail_width"
+            type="integer"
+            label="COM_TURISMO_CONFIG_THUMBNAIL_WIDTH_LABEL"
+            description="COM_TURISMO_CONFIG_THUMBNAIL_WIDTH_DESC"
+            default="300"
+            suffix="px"
+        />
+        <field
+            name="thumbnail_height"
+            type="integer"
+            label="COM_TURISMO_CONFIG_THUMBNAIL_HEIGHT_LABEL"
+            description="COM_TURISMO_CONFIG_THUMBNAIL_HEIGHT_DESC"
+            default="200"
+            suffix="px"
+        />
+        <field
+            name="max_images"
+            type="integer"
+            label="COM_TURISMO_CONFIG_MAX_IMAGES_LABEL"
+            description="COM_TURISMO_CONFIG_MAX_IMAGES_DESC"
+            default="10"
+        />
+    </fieldset>
+
+    <fieldset name="email" label="COM_TURISMO_CONFIG_EMAIL_LABEL" description="COM_TURISMO_CONFIG_EMAIL_DESC">
+        <field
+            name="notification_email"
+            type="email"
+            label="COM_TURISMO_CONFIG_NOTIFICATION_EMAIL_LABEL"
+            description="COM_TURISMO_CONFIG_NOTIFICATION_EMAIL_DESC"
+            validate="email"
+        />
+        <field
+            name="email_subject_prefix"
+            type="text"
+            label="COM_TURISMO_CONFIG_EMAIL_SUBJECT_PREFIX_LABEL"
+            description="COM_TURISMO_CONFIG_EMAIL_SUBJECT_PREFIX_DESC"
+            default="[Turismo]"
+        />
+        <field
+            name="send_admin_notification"
+            type="radio"
+            label="COM_TURISMO_CONFIG_SEND_ADMIN_NOTIFICATION_LABEL"
+            description="COM_TURISMO_CONFIG_SEND_ADMIN_NOTIFICATION_DESC"
+            default="1"
+            class="btn-group btn-group-yesno"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field
+            name="send_user_notification"
+            type="radio"
+            label="COM_TURISMO_CONFIG_SEND_USER_NOTIFICATION_LABEL"
+            description="COM_TURISMO_CONFIG_SEND_USER_NOTIFICATION_DESC"
+            default="1"
+            class="btn-group btn-group-yesno"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+
+    <fieldset name="reviews" label="COM_TURISMO_CONFIG_REVIEWS_LABEL" description="COM_TURISMO_CONFIG_REVIEWS_DESC">
+        <field
+            name="enable_reviews"
+            type="radio"
+            label="COM_TURISMO_CONFIG_ENABLE_REVIEWS_LABEL"
+            description="COM_TURISMO_CONFIG_ENABLE_REVIEWS_DESC"
+            default="1"
+            class="btn-group btn-group-yesno"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field
+            name="require_login"
+            type="radio"
+            label="COM_TURISMO_CONFIG_REQUIRE_LOGIN_LABEL"
+            description="COM_TURISMO_CONFIG_REQUIRE_LOGIN_DESC"
+            default="1"
+            class="btn-group btn-group-yesno"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field
+            name="moderate_reviews"
+            type="radio"
+            label="COM_TURISMO_CONFIG_MODERATE_REVIEWS_LABEL"
+            description="COM_TURISMO_CONFIG_MODERATE_REVIEWS_DESC"
+            default="1"
+            class="btn-group btn-group-yesno"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field
+            name="min_review_length"
+            type="integer"
+            label="COM_TURISMO_CONFIG_MIN_REVIEW_LENGTH_LABEL"
+            description="COM_TURISMO_CONFIG_MIN_REVIEW_LENGTH_DESC"
+            default="10"
+        />
+        <field
+            name="max_review_length"
+            type="integer"
+            label="COM_TURISMO_CONFIG_MAX_REVIEW_LENGTH_LABEL"
+            description="COM_TURISMO_CONFIG_MAX_REVIEW_LENGTH_DESC"
+            default="1000"
+        />
+    </fieldset>
+
+    <fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">
+        <field
+            name="rules"
+            type="rules"
+            label="JCONFIG_PERMISSIONS_LABEL"
+            class="inputbox"
+            validate="rules"
+            filter="rules"
+            component="com_turismo"
+            section="component"
+        />
+    </fieldset>
+</config>

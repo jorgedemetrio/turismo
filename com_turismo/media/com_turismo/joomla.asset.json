@@ -2,30 +2,16 @@
     "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
     "name": "com_turismo",
     "version": "1.0.0",
-    "description": "Turismo Component Assets",
-    "license": "GNU General Public License version 2 or later",
+    "description": "Assets for Tourism Component",
+    "license": "GPL-2.0-or-later",
     "assets": [
-        {
-            "name": "com_turismo.admin",
-            "type": "style",
-            "uri": "com_turismo/admin.css"
-        },
         {
             "name": "com_turismo.site",
             "type": "style",
-            "uri": "com_turismo/site.css"
-        },
-        {
-            "name": "com_turismo.admin",
-            "type": "script",
-            "uri": "com_turismo/admin.js",
+            "uri": "com_turismo/site.css",
             "dependencies": [
-                "core",
-                "bootstrap"
-            ],
-            "attributes": {
-                "defer": true
-            }
+                "fontawesome"
+            ]
         },
         {
             "name": "com_turismo.site",
@@ -33,7 +19,94 @@
             "uri": "com_turismo/site.js",
             "dependencies": [
                 "core",
-                "bootstrap"
+                "jquery"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_turismo.admin",
+            "type": "style",
+            "uri": "com_turismo/admin.css",
+            "dependencies": [
+                "fontawesome"
+            ]
+        },
+        {
+            "name": "com_turismo.admin",
+            "type": "script",
+            "uri": "com_turismo/admin.js",
+            "dependencies": [
+                "core",
+                "jquery"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_turismo.maps",
+            "type": "script",
+            "uri": "com_turismo/maps.js",
+            "dependencies": [
+                "com_turismo.site"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_turismo.rating",
+            "type": "script",
+            "uri": "com_turismo/rating.js",
+            "dependencies": [
+                "com_turismo.site"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_turismo.gallery",
+            "type": "script",
+            "uri": "com_turismo/gallery.js",
+            "dependencies": [
+                "com_turismo.site"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_turismo.upload",
+            "type": "script",
+            "uri": "com_turismo/upload.js",
+            "dependencies": [
+                "com_turismo.admin"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_turismo.jquery.mask",
+            "type": "script",
+            "uri": "com_turismo/jquery.mask.min.js",
+            "dependencies": [
+                "jquery"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_turismo.validation",
+            "type": "script",
+            "uri": "com_turismo/validation.js",
+            "dependencies": [
+                "com_turismo.site",
+                "com_turismo.jquery.mask"
             ],
             "attributes": {
                 "defer": true

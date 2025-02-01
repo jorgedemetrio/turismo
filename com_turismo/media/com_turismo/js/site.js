@@ -6,147 +6,220 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+(function ($) {
     'use strict';
 
-    // Inicialização de tooltips do Bootstrap
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    // Inicialização quando o DOM estiver pronto
+    $(document).ready(function () {
+        initializeGallery();
+        initializeRating();
+        initializeValidation();
+        initializeMasks();
+        initializeFilters();
+        initializeMap();
     });
 
-    // Sistema de avaliação com estrelas
-    var ratingContainers = document.querySelectorAll('.turismo-rating');
-    if (ratingContainers.length) {
-        ratingContainers.forEach(function(container) {
-            var stars = container.querySelectorAll('.star');
-            var input = container.querySelector('input[type="hidden"]');
+    // Galeria de Fotos
+    function initializeGallery() {
+        const $mainImage = $('.turismo-main-image');
+        const $thumbnails = $('.turismo-thumbnail');
 
-            stars.forEach(function(star, index) {
-                // Evento hover
-                star.addEventListener('mouseover', function() {
-                    stars.forEach(function(s, i) {
-                        if (i <= index) {
-                            s.classList.add('hover');
-                        } else {
-                            s.classList.remove('hover');
-                        }
-                    });
-                });
-
-                // Evento click
-                star.addEventListener('click', function() {
-                    var rating = index + 1;
-                    input.value = rating;
-                    stars.forEach(function(s, i) {
-                        if (i < rating) {
-                            s.classList.add('active');
-                        } else {
-                            s.classList.remove('active');
-                        }
-                    });
-                });
+        $thumbnails.on('click', function () {
+            const newSrc = $(this).attr('src');
+            $mainImage.fadeOut(300, function () {
+                $(this).attr('src', newSrc).fadeIn(300);
             });
+            $thumbnails.removeClass('active');
+            $(this).addClass('active');
+        });
 
-            // Remover hover
-            container.addEventListener('mouseleave', function() {
-                stars.forEach(function(star) {
-                    star.classList.remove('hover');
-                });
-            });
+        // Navegação por teclado
+        $thumbnails.on('keypress', function (e) {
+            if (e.which === 13 || e.which === 32) {
+                $(this).click();
+            }
         });
     }
 
-    // Inicialização do mapa
-    var mapElement = document.getElementById('turismo-map');
-    if (mapElement && typeof google !== 'undefined') {
-        var lat = parseFloat(mapElement.dataset.lat) || -23.5505;
-        var lng = parseFloat(mapElement.dataset.lng) || -46.6333;
-        var zoom = parseInt(mapElement.dataset.zoom) || 15;
+    // Sistema de Avaliação
+    function initializeRating() {
+        const $ratingStars = $('.turismo-rating-input .fa-star');
+        const $ratingInput = $('#rating-value');
 
-        var map = new google.maps.Map(mapElement, {
-            center: { lat: lat, lng: lng },
-            zoom: zoom,
-            scrollwheel: false
+        $ratingStars.on('mouseover', function () {
+            const rating = $(this).data('rating');
+            updateStars(rating);
         });
 
-        var marker = new google.maps.Marker({
-            position: { lat: lat, lng: lng },
-            map: map,
-            animation: google.maps.Animation.DROP
+        $ratingStars.on('mouseout', function () {
+            const currentRating = $ratingInput.val();
+            updateStars(currentRating);
         });
 
-        // Info window se houver conteúdo
-        if (mapElement.dataset.info) {
-            var infoWindow = new google.maps.InfoWindow({
-                content: mapElement.dataset.info
-            });
+        $ratingStars.on('click', function () {
+            const rating = $(this).data('rating');
+            $ratingInput.val(rating);
+            updateStars(rating);
+        });
 
-            marker.addListener('click', function() {
-                infoWindow.open(map, marker);
+        function updateStars(rating) {
+            $ratingStars.each(function () {
+                const starRating = $(this).data('rating');
+                $(this).toggleClass('fas', starRating <= rating);
+                $(this).toggleClass('far', starRating > rating);
             });
         }
     }
 
-    // Validação de formulários
-    var forms = document.querySelectorAll('.needs-validation');
-    Array.prototype.slice.call(forms).forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
+    // Validação de Formulários
+    function initializeValidation() {
+        $('.turismo-form').on('submit', function (e) {
+            const $form = $(this);
+            const $requiredFields = $form.find('[required]');
+            let isValid = true;
+
+            $requiredFields.each(function () {
+                const $field = $(this);
+                const value = $field.val().trim();
+
+                if (!value) {
+                    isValid = false;
+                    showError($field, Joomla.Text._('COM_TURISMO_CAMPO_OBRIGATORIO'));
+                } else {
+                    clearError($field);
+
+                    // Validação específica por tipo
+                    if ($field.attr('type') === 'email' && !isValidEmail(value)) {
+                        isValid = false;
+                        showError($field, Joomla.Text._('COM_TURISMO_EMAIL_INVALIDO'));
+                    }
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();
             }
-            form.classList.add('was-validated');
-        }, false);
-    });
-
-    // Upload de imagens com preview
-    var imageInputs = document.querySelectorAll('.turismo-image-upload');
-    if (imageInputs.length) {
-        imageInputs.forEach(function(input) {
-            input.addEventListener('change', function(e) {
-                var preview = document.getElementById(this.dataset.preview);
-                if (preview && this.files && this.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
         });
     }
 
-    // Filtros dinâmicos
-    var filterInputs = document.querySelectorAll('.turismo-filter');
-    if (filterInputs.length) {
-        filterInputs.forEach(function(input) {
-            input.addEventListener('change', function() {
-                var form = this.closest('form');
-                if (form) {
-                    form.submit();
-                }
-            });
-        });
+    // Máscaras de Input
+    function initializeMasks() {
+        if ($.fn.mask) {
+            $('.phone-mask').mask('(00) 00000-0000');
+            $('.cep-mask').mask('00000-000');
+            $('.cnpj-mask').mask('00.000.000/0000-00');
+        }
     }
 
-    // Carregamento lazy de imagens
-    var lazyImages = document.querySelectorAll('.turismo-lazy-load');
-    if ('IntersectionObserver' in window) {
-        var imageObserver = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    var img = entry.target;
-                    img.src = img.dataset.src;
-                    img.classList.remove('turismo-lazy-load');
-                    imageObserver.unobserve(img);
-                }
-            });
+    // Filtros de Busca
+    function initializeFilters() {
+        const $filters = $('.turismo-filter select, .turismo-filter input');
+        let timeout;
+
+        $filters.on('change keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(applyFilters, 500);
         });
 
-        lazyImages.forEach(function(img) {
-            imageObserver.observe(img);
-        });
+        function applyFilters() {
+            const filters = {};
+            $filters.each(function () {
+                const value = $(this).val();
+                if (value) {
+                    filters[$(this).attr('name')] = value;
+                }
+            });
+
+            // Mostra loading
+            $('.turismo-list').addClass('loading');
+
+            // Faz a requisição AJAX
+            $.ajax({
+                url: 'index.php?option=com_turismo&task=locais.filter&format=json',
+                method: 'POST',
+                data: filters,
+                success: function (response) {
+                    updateResults(response);
+                },
+                error: function (xhr) {
+                    showAlert('error', Joomla.Text._('COM_TURISMO_ERRO_FILTRAR'));
+                },
+                complete: function () {
+                    $('.turismo-list').removeClass('loading');
+                }
+            });
+        }
     }
-});
+
+    // Inicialização do Mapa
+    function initializeMap() {
+        const $map = $('#turismo-map');
+        if ($map.length && typeof google !== 'undefined') {
+            const lat = parseFloat($map.data('lat'));
+            const lng = parseFloat($map.data('lng'));
+            const zoom = parseInt($map.data('zoom')) || 15;
+
+            const map = new google.maps.Map($map[0], {
+                center: { lat, lng },
+                zoom: zoom,
+                scrollwheel: false
+            });
+
+            new google.maps.Marker({
+                position: { lat, lng },
+                map: map,
+                title: $map.data('title')
+            });
+        }
+    }
+
+    // Funções Auxiliares
+    function showError($field, message) {
+        clearError($field);
+        $field.addClass('is-invalid');
+        $('<div class="invalid-feedback">' + message + '</div>').insertAfter($field);
+    }
+
+    function clearError($field) {
+        $field.removeClass('is-invalid');
+        $field.next('.invalid-feedback').remove();
+    }
+
+    function isValidEmail(email) {
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return re.test(email);
+    }
+
+    function showAlert(type, message) {
+        const alertClass = type === 'error' ? 'danger' : type;
+        const $alert = $('<div class="alert alert-' + alertClass + ' alert-dismissible fade show" role="alert">' +
+            message +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+            '</div>');
+
+        $('.turismo-alerts').append($alert);
+
+        setTimeout(function () {
+            $alert.alert('close');
+        }, 5000);
+    }
+
+    function updateResults(response) {
+        const $container = $('.turismo-list');
+        $container.html(response.html);
+
+        // Atualiza a URL com os parâmetros de filtro
+        if (history.pushState) {
+            const url = new URL(window.location);
+            Object.entries(response.filters).forEach(([key, value]) => {
+                if (value) {
+                    url.searchParams.set(key, value);
+                } else {
+                    url.searchParams.delete(key);
+                }
+            });
+            history.pushState({}, '', url);
+        }
+    }
+
+})(jQuery);

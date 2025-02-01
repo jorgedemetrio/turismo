@@ -4,31 +4,12 @@
         <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
         <action name="core.options" title="JACTION_OPTIONS" description="JACTION_OPTIONS_COMPONENT_DESC" />
         <action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
-        <action name="core.create" title="JACTION_CREATE" description="COM_TURISMO_ACCESS_CREATE_DESC" />
-        <action name="core.delete" title="JACTION_DELETE" description="COM_TURISMO_ACCESS_DELETE_DESC" />
-        <action name="core.edit" title="JACTION_EDIT" description="COM_TURISMO_ACCESS_EDIT_DESC" />
-        <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_TURISMO_ACCESS_EDIT_STATE_DESC" />
-        <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_TURISMO_ACCESS_EDIT_OWN_DESC" />
-    </section>
-    <section name="local">
-        <action name="core.create" title="JACTION_CREATE" description="COM_TURISMO_ACCESS_CREATE_LOCAL_DESC" />
-        <action name="core.delete" title="JACTION_DELETE" description="COM_TURISMO_ACCESS_DELETE_LOCAL_DESC" />
-        <action name="core.edit" title="JACTION_EDIT" description="COM_TURISMO_ACCESS_EDIT_LOCAL_DESC" />
-        <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_TURISMO_ACCESS_EDIT_STATE_LOCAL_DESC" />
-        <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_TURISMO_ACCESS_EDIT_OWN_LOCAL_DESC" />
-    </section>
-    <section name="avaliacao">
-        <action name="core.create" title="JACTION_CREATE" description="COM_TURISMO_ACCESS_CREATE_AVALIACAO_DESC" />
-        <action name="core.delete" title="JACTION_DELETE" description="COM_TURISMO_ACCESS_DELETE_AVALIACAO_DESC" />
-        <action name="core.edit" title="JACTION_EDIT" description="COM_TURISMO_ACCESS_EDIT_AVALIACAO_DESC" />
-        <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_TURISMO_ACCESS_EDIT_STATE_AVALIACAO_DESC" />
-        <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_TURISMO_ACCESS_EDIT_OWN_AVALIACAO_DESC" />
-    </section>
-    <section name="tipo">
-        <action name="core.create" title="JACTION_CREATE" description="COM_TURISMO_ACCESS_CREATE_TIPO_DESC" />
-        <action name="core.delete" title="JACTION_DELETE" description="COM_TURISMO_ACCESS_DELETE_TIPO_DESC" />
-        <action name="core.edit" title="JACTION_EDIT" description="COM_TURISMO_ACCESS_EDIT_TIPO_DESC" />
-        <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_TURISMO_ACCESS_EDIT_STATE_TIPO_DESC" />
+        <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+        <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+        <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+        <action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+        <action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+        <action name="core.edit.value" title="JACTION_EDITVALUE" description="JACTION_EDITVALUE_COMPONENT_DESC" />
     </section>
     <section name="category">
         <action name="core.create" title="JACTION_CREATE" description="COM_CATEGORIES_ACCESS_CREATE_DESC" />
@@ -36,5 +17,54 @@
         <action name="core.edit" title="JACTION_EDIT" description="COM_CATEGORIES_ACCESS_EDIT_DESC" />
         <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
         <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
+    </section>
+    <section name="local">
+        <action name="core.create" title="COM_TURISMO_ACCESS_CREATE_LOCAL" description="COM_TURISMO_ACCESS_CREATE_LOCAL_DESC" />
+        <action name="core.delete" title="COM_TURISMO_ACCESS_DELETE_LOCAL" description="COM_TURISMO_ACCESS_DELETE_LOCAL_DESC" />
+        <action name="core.edit" title="COM_TURISMO_ACCESS_EDIT_LOCAL" description="COM_TURISMO_ACCESS_EDIT_LOCAL_DESC" />
+        <action name="core.edit.state" title="COM_TURISMO_ACCESS_EDITSTATE_LOCAL" description="COM_TURISMO_ACCESS_EDITSTATE_LOCAL_DESC" />
+        <action name="core.edit.own" title="COM_TURISMO_ACCESS_EDITOWN_LOCAL" description="COM_TURISMO_ACCESS_EDITOWN_LOCAL_DESC" />
+        <action name="local.review" title="COM_TURISMO_ACCESS_REVIEW_LOCAL" description="COM_TURISMO_ACCESS_REVIEW_LOCAL_DESC" />
+        <action name="local.moderate" title="COM_TURISMO_ACCESS_MODERATE_LOCAL" description="COM_TURISMO_ACCESS_MODERATE_LOCAL_DESC" />
+        <action name="local.feature" title="COM_TURISMO_ACCESS_FEATURE_LOCAL" description="COM_TURISMO_ACCESS_FEATURE_LOCAL_DESC" />
+    </section>
+    <section name="review">
+        <action name="core.create" title="COM_TURISMO_ACCESS_CREATE_REVIEW" description="COM_TURISMO_ACCESS_CREATE_REVIEW_DESC" />
+        <action name="core.delete" title="COM_TURISMO_ACCESS_DELETE_REVIEW" description="COM_TURISMO_ACCESS_DELETE_REVIEW_DESC" />
+        <action name="core.edit" title="COM_TURISMO_ACCESS_EDIT_REVIEW" description="COM_TURISMO_ACCESS_EDIT_REVIEW_DESC" />
+        <action name="core.edit.state" title="COM_TURISMO_ACCESS_EDITSTATE_REVIEW" description="COM_TURISMO_ACCESS_EDITSTATE_REVIEW_DESC" />
+        <action name="core.edit.own" title="COM_TURISMO_ACCESS_EDITOWN_REVIEW" description="COM_TURISMO_ACCESS_EDITOWN_REVIEW_DESC" />
+        <action name="review.moderate" title="COM_TURISMO_ACCESS_MODERATE_REVIEW" description="COM_TURISMO_ACCESS_MODERATE_REVIEW_DESC" />
+    </section>
+    <section name="tipo">
+        <action name="core.create" title="COM_TURISMO_ACCESS_CREATE_TIPO" description="COM_TURISMO_ACCESS_CREATE_TIPO_DESC" />
+        <action name="core.delete" title="COM_TURISMO_ACCESS_DELETE_TIPO" description="COM_TURISMO_ACCESS_DELETE_TIPO_DESC" />
+        <action name="core.edit" title="COM_TURISMO_ACCESS_EDIT_TIPO" description="COM_TURISMO_ACCESS_EDIT_TIPO_DESC" />
+        <action name="core.edit.state" title="COM_TURISMO_ACCESS_EDITSTATE_TIPO" description="COM_TURISMO_ACCESS_EDITSTATE_TIPO_DESC" />
+        <action name="core.edit.own" title="COM_TURISMO_ACCESS_EDITOWN_TIPO" description="COM_TURISMO_ACCESS_EDITOWN_TIPO_DESC" />
+    </section>
+   <section name="cardapio">
+        <action name="core.create" title="JACTION_CREATE" description="COM_TURISMO_ACCESS_CREATE_CARDAPIO_DESC" />
+        <action name="core.delete" title="JACTION_DELETE" description="COM_TURISMO_ACCESS_DELETE_CARDAPIO_DESC" />
+        <action name="core.edit" title="JACTION_EDIT" description="COM_TURISMO_ACCESS_EDIT_CARDAPIO_DESC" />
+        <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_TURISMO_ACCESS_EDITSTATE_CARDAPIO_DESC" />
+        <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_TURISMO_ACCESS_EDITOWN_CARDAPIO_DESC" />
+    </section>
+    <section name="quarto">
+        <action name="core.create" title="JACTION_CREATE" description="COM_TURISMO_ACCESS_CREATE_QUARTO_DESC" />
+        <action name="core.delete" title="JACTION_DELETE" description="COM_TURISMO_ACCESS_DELETE_QUARTO_DESC" />
+        <action name="core.edit" title="JACTION_EDIT" description="COM_TURISMO_ACCESS_EDIT_QUARTO_DESC" />
+        <action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_TURISMO_ACCESS_EDITSTATE_QUARTO_DESC" />
+        <action name="core.edit.own" title="JACTION_EDITOWN" description="COM_TURISMO_ACCESS_EDITOWN_QUARTO_DESC" />
+    </section>
+    <section name="image">
+        <action name="core.create" title="COM_TURISMO_ACCESS_CREATE_IMAGE" description="COM_TURISMO_ACCESS_CREATE_IMAGE_DESC" />
+        <action name="core.delete" title="COM_TURISMO_ACCESS_DELETE_IMAGE" description="COM_TURISMO_ACCESS_DELETE_IMAGE_DESC" />
+        <action name="core.edit" title="COM_TURISMO_ACCESS_EDIT_IMAGE" description="COM_TURISMO_ACCESS_EDIT_IMAGE_DESC" />
+        <action name="core.edit.state" title="COM_TURISMO_ACCESS_EDITSTATE_IMAGE" description="COM_TURISMO_ACCESS_EDITSTATE_IMAGE_DESC" />
+        <action name="core.edit.own" title="COM_TURISMO_ACCESS_EDITOWN_IMAGE" description="COM_TURISMO_ACCESS_EDITOWN_IMAGE_DESC" />
+        <action name="image.upload" title="COM_TURISMO_ACCESS_UPLOAD_IMAGE" description="COM_TURISMO_ACCESS_UPLOAD_IMAGE_DESC" />
+        <action name="image.crop" title="COM_TURISMO_ACCESS_CROP_IMAGE" description="COM_TURISMO_ACCESS_CROP_IMAGE_DESC" />
+        <action name="image.resize" title="COM_TURISMO_ACCESS_RESIZE_IMAGE" description="COM_TURISMO_ACCESS_RESIZE_IMAGE_DESC" />
     </section>
 </access>
