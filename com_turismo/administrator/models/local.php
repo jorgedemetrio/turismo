@@ -50,6 +50,51 @@ class TurismoModelLocal extends JModelAdmin
 
         return $query;
     }
+    public function updateHighlight($id, $highlight)
+    {
+        // Obtém a tabela
+        $table = $this->getTable();
+
+        // Carrega o registro
+        if (!$table->load($id)) {
+            $this->setError(JText::_('Failed to load record'));
+            return false;
+        }
+
+        // Altera o destaque
+        $table->highlight = $highlight;
+
+        // Salva o registro
+        if (!$table->store()) {
+            $this->setError($table->getError());
+            return false;
+        }
+
+        return true;
+    }
+
+    public function updateStatus($id, $status)
+    {
+        // Obtém a tabela
+        $table = $this->getTable();
+
+        // Carrega o registro
+        if (!$table->load($id)) {
+            $this->setError(JText::_('Failed to load record'));
+            return false;
+        }
+
+        // Altera o status
+        $table->status = $status;
+
+        // Salva o registro
+        if (!$table->store()) {
+            $this->setError($table->getError());
+            return false;
+        }
+
+        return true;
+    }
 
     // Implementar métodos adicionais conforme necessário
 }
