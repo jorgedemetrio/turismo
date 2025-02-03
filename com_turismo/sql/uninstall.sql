@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS `#__turismo_recursos_quarto`;
 DROP TABLE IF EXISTS `#__turismo_quartos`;
 
 -- Remoção da tabela de locais
-DROP TABLE IF EXISTS `#__turismo_locais`;
+DROP TABLE IF EXISTS `#__turismo_local`;
 
 -- Remoção da tabela de tipos de locais
 DROP TABLE IF EXISTS `#__turismo_tipo_local`;

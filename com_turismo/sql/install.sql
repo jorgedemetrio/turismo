@@ -69,9 +69,11 @@ CREATE TABLE IF NOT EXISTS `#__turismo_bom_para` (
 
 
 -- Criação da tabela de locais
-CREATE TABLE IF NOT EXISTS `#__turismo_locais` (
+CREATE TABLE IF NOT EXISTS `#__turismo_local` (
     `id` CHAR(36) NOT NULL,
     `nome` VARCHAR(250) NOT NULL,
+    `site` VARCHAR(250) NULL,
+    `instagram` VARCHAR(250) NULL,
     `alias` VARCHAR(250) NOT NULL,
     `reserva` TINYINT(1) NOT NULL,
     `pet_fredly` TINYINT(1) NOT NULL,
@@ -84,8 +86,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_locais` (
     `complemento` VARCHAR(250),
     `faixa_preco` DECIMAL(10,2),
     `horarios_funcionamento` TEXT, -- <-- Arrumar isso
-    `email_responsavel` VARCHAR(250), -- <-- Arrumar isso
-    `telefone_contato` VARCHAR(250), -- <-- Arrumar isso
     `descricao` TEXT,
     `ip_criador` VARCHAR(45) NOT NULL,
     `ip_alterador` VARCHAR(45),
@@ -107,6 +107,51 @@ CREATE TABLE IF NOT EXISTS `#__turismo_locais` (
     FOREIGN KEY (`cidade_id`) REFERENCES `#__turismo_cidades`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- Criação da tabela de tipos de locais
+CREATE TABLE IF NOT EXISTS `#__turismo_horario_funcionamento` (
+    `id` INT(11) NOT NULL,
+    `id_local` CHAR(36) NOT NULL,
+
+    `abre_feriados` TINYINT(1) DEFAULT 0,
+    `abre_domingo` VARCHAR(5) NOT NULL,
+    `abre_segunda` VARCHAR(5) NOT NULL,
+    `abre_terca` VARCHAR(5) NOT NULL,
+    `abre_quarta` VARCHAR(5) NOT NULL,
+    `abre_quinta` VARCHAR(5) NOT NULL,
+    `abre_sexta` VARCHAR(5) NOT NULL,
+    `abre_sabado` VARCHAR(5) NOT NULL,
+
+    `fecha_domingo` VARCHAR(5) NOT NULL,
+    `fecha_segunda` VARCHAR(5) NOT NULL,
+    `fecha_terca` VARCHAR(5) NOT NULL,
+    `fecha_quarta` VARCHAR(5) NOT NULL,
+    `fecha_quinta` VARCHAR(5) NOT NULL,
+    `fecha_sexta` VARCHAR(5) NOT NULL,
+    `fecha_sabado` VARCHAR(5) NOT NULL,
+
+    `ip_criador` VARCHAR(45) NOT NULL,
+    `ip_alterador` VARCHAR(45),
+    `ip_proxy_criador` VARCHAR(45),
+    `ip_proxy_alterador` VARCHAR(45),
+    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by` INT(11) NOT NULL,
+    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `modified_by` INT(11),
+   
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
+
+    FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+
+
 -- Criação da tabela de tipos de locais
 CREATE TABLE IF NOT EXISTS `#__turismo_local_bom_para` (
     `id_bom_para` INT(11) NOT NULL,
@@ -119,10 +164,8 @@ CREATE TABLE IF NOT EXISTS `#__turismo_local_bom_para` (
     `created_by` INT(11) NOT NULL,
 
     FOREIGN KEY (`id_bom_para`) REFERENCES `#__turismo_bom_para`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE,
-
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     PRIMARY KEY (`id_bom_para`, `id_local`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -146,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_evento` (
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `modified_by` INT(11),
     PRIMARY KEY (`id`)
-    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -165,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_cozinha` (
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NOT NULL,
     PRIMARY KEY (`id_tipo_cozinha`, `id_local`)
-    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_tipo_cozinha`) REFERENCES `#__turismo_tipo_cozinha`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -189,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_email` (
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `modified_by` INT(11),
     PRIMARY KEY (`id`)
-    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_user`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
@@ -217,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_telefone` (
     `modified_by` INT(11),
     PRIMARY KEY (`id`)
     FOREIGN KEY (`id_cidade`) REFERENCES `#__turismo_cidades`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_user`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
@@ -242,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_quartos` (
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE
+    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Criação da tabela de recursos de quartos
@@ -289,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_cardapio` (
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE
+    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Criação da tabela de fotos de cardápios
@@ -334,7 +377,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_log_alteracao_local` (
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE
+    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Criação da tabela de log de buscas
@@ -367,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_local_user` (
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     PRIMARY KEY (`local_id`, `user_id`),
-    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`user_id`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -378,7 +421,12 @@ CREATE TABLE IF NOT EXISTS `#__turismo_mensagens` (
     `email` VARCHAR(250) NOT NULL,
     `telefone` VARCHAR(250),
     `mensagem` TEXT NOT NULL,
-    `id_local` CHAR(36) NOT NULL,
+
+    `id_local` CHAR(36) NULL,  -- Enviado no formulário de dúvidas do local
+    `id_encontro` INT(11) NULL, -- Enviado no formulário de encontros
+    `id_destinatario` INT(11) NULL, -- Enviado diretamente para um usuário
+    `id_mensagem_resposta` INT(11) NULL, -- Respondendo uma mensagem, neste caso tb deve ter o id_destinatario
+
     `data_envio` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `ip` VARCHAR(45) NOT NULL,
     `ip_proxy` VARCHAR(45),
@@ -388,9 +436,15 @@ CREATE TABLE IF NOT EXISTS `#__turismo_mensagens` (
     `ordering` INT(11) NOT NULL DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NULL,
-    FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE
+
+
+    FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_destinatario`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`createid_mensagem_respostad_by`) REFERENCES `#__turismo_mensagens`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_encontro`) REFERENCES `#__turismo_encontros`(`id`) ON DELETE CASCADE
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Criação da tabela de CEPs
@@ -410,6 +464,70 @@ CREATE TABLE IF NOT EXISTS `#__turismo_badwords` (
     `palavra` VARCHAR(100) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+
+
+-- -----------------------------------------------------
+-- Table `#__turismo_encontros`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `#__turismo_encontros` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `id_local` BIGINT NOT NULL,
+
+	`titulo` VARCHAR(255) NOT NULL,
+	`alias` VARCHAR(255) NOT NULL,
+    `descricao` TEXT  NOT NULL,
+	`id_bom_para` INT(11) NOT NULL,
+
+    
+    `data_hora` DATETIME NOT NULL,
+    `limite_participantes` INT DEFAULT 0,
+	`publico` TINYINT(1) DEFAULT 1,
+    `destaque` TINYINT(1) DEFAULT 0,
+
+	
+    `ip_criador` VARCHAR(45) NOT NULL,
+    `ip_alterador` VARCHAR(45),
+    `ip_proxy_criador` VARCHAR(45),
+    `ip_proxy_alterador` VARCHAR(45),
+    
+    `status` ENUM('ATIVO', 'REPROVADO', 'NOVO', 'REMOVIDO') NOT NULL DEFAULT 'NOVO',
+    `acessos` INT(11) DEFAULT 0,
+    `media_avaliacoes` DECIMAL(3,2) DEFAULT 0,
+    `ordering` INT(11) NOT NULL DEFAULT 0,
+    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by` INT(11) NOT NULL,
+    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `modified_by` INT(11),
+
+    PRIMARY KEY (`id`),
+	FOREIGN KEY (`id_bom_para`) REFERENCES `#__turismo_bom_para`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+
+
+CREATE TABLE IF NOT EXISTS `#__turismo_encontros_confirmados` (
+    `id_encontro` INT(11) NOT NULL,
+    `id_user` INT(11) NOT NULL,
+    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `ip_criador` VARCHAR(45) NOT NULL,
+    `ip_proxy_criador` VARCHAR(45),
+
+    PRIMARY KEY (`id_user`,`id_encontro`),
+    FOREIGN KEY (`id_user`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_encontro`) REFERENCES `#__turismo_encontros`(`id`) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+
+
+
 
 
 SELECT max(id) INTO @IDUSUARIO FROM #__users limit 1;
@@ -593,55 +711,89 @@ VALUES ('com_turismo', 'Tipos de Locais', 'tipos-de-locais', 'Categoria raiz par
 
 -- Inserir tipos de estabelecimento vinculados às categorias
 INSERT INTO `#__turismo_tipo_local` (`nome`, `estabelecimento`, `catid`, `created_by`, `state`) VALUES
-('Restaurante', 1, (SELECT id FROM `#__categories` WHERE alias='
-' LIMIT 1), 1, 1),
+-- Com quartos
 ('Hotel', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Motel', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Sitio', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Pousada', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+-- Com cardapio
 ('Bar', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Restaurante', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Soverteria', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Tabacaria', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Distribuidora', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Panificadora', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Café', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+
 ('Loja de Souvenirs', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Agência de Viagens', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Praças', 0, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Parques', 0, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Ponto Turístico', 0, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Balada', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
-('Museus', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
-('Eventos', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Museu', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Evento', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Zoológico', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Parque de eletrônico', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Parque Aquatico', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Cinema', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Shopping', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Mirante', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
+('Praia', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1),
 ('Biblioteca', 1, (SELECT id FROM `#__categories` WHERE alias='tipos-de-locais' LIMIT 1), 1, 1);
 
 INSERT INTO `#__turismo_bom_para` (`nome`, `ip_criador`, `created_by`, `ordering`) VALUES
-('Passeio com Filhos', @IPACESSO, @IDUSUARIO, 1 ),
-('Noites quentes', @IPACESSO, @IDUSUARIO, 1 ),
-('Refrescar', @IPACESSO, @IDUSUARIO, 1 ),
+('Instagrama', @IPACESSO, @IDUSUARIO, 1 ),
+('Café da manhã diferente', @IPACESSO, @IDUSUARIO, 2 ),
+('Roteiro Aleatório', @IPACESSO, @IDUSUARIO, 2 ),
+('Dia dos pais', @IPACESSO, @IDUSUARIO, 0 ),
+('Dia das mães', @IPACESSO, @IDUSUARIO, 0 ),
+('Dia dos namorados', @IPACESSO, @IDUSUARIO, 0 ),
+('Dia das crianças', @IPACESSO, @IDUSUARIO, 0 ),
+('Halow Ween', @IPACESSO, @IDUSUARIO, 0 ),
+('Carnaval / Folia', @IPACESSO, @IDUSUARIO, 0 ),
+('Festa Junina', @IPACESSO, @IDUSUARIO, 0 ),
+('Tomar um quentão', @IPACESSO, @IDUSUARIO, 0 ),
+('Fazer amigos', @IPACESSO, @IDUSUARIO, 1 ),
+('Fazer compras', @IPACESSO, @IDUSUARIO, 2 ),
+('Despairecer', @IPACESSO, @IDUSUARIO, 2 ),
+('Diversão', @IPACESSO, @IDUSUARIO, 2 ),
+('Adrenalina/Radical', @IPACESSO, @IDUSUARIO, 2 ),
+('Loucuras de amor', @IPACESSO, @IDUSUARIO, 2 ),
+('Pedir em namoro', @IPACESSO, @IDUSUARIO, 2 ),
+('Pedir em casamento', @IPACESSO, @IDUSUARIO, 2 ),
+('Passeio com Filhos', @IPACESSO, @IDUSUARIO, 2 ),
+('Noites quentes', @IPACESSO, @IDUSUARIO, 2 ),
+('Refrescar', @IPACESSO, @IDUSUARIO, 2 ),
 ('Sair da rotina', @IPACESSO, @IDUSUARIO, 1 ),
 ('Passeio com Cães', @IPACESSO, @IDUSUARIO),
-('Petiscar', @IPACESSO, @IDUSUARIO, 1 ),
-('Pet-frendly', @IPACESSO, @IDUSUARIO, 1 ),
+('Petiscar', @IPACESSO, @IDUSUARIO, 2 ),
+('Pet-frendly', @IPACESSO, @IDUSUARIO, 2 ),
 ('Encontro', @IPACESSO, @IDUSUARIO, 1 ),
 ('Primeiro encontro', @IPACESSO, @IDUSUARIO, 1 ),
+('Comemorar', @IPACESSO, @IDUSUARIO, 1 ),
+('Relaxar', @IPACESSO, @IDUSUARIO, 2 ),
+('Trabalhar', @IPACESSO, @IDUSUARIO, 2 ),
+('Estudar', @IPACESSO, @IDUSUARIO, 2 ),
+('Curtir a dois', @IPACESSO, @IDUSUARIO, 1 ),
 ('Conversar', @IPACESSO, @IDUSUARIO, 1 ),
 ('Impressionar', @IPACESSO, @IDUSUARIO, 1 ),
 ('Experimentar algo diferente', @IPACESSO, @IDUSUARIO, 1 ),
 ('Sair com amigos', @IPACESSO, @IDUSUARIO, 1 ),
-('Festa de aniversário', @IPACESSO, @IDUSUARIO, 1 ),
-('Reunião de negócios', @IPACESSO, @IDUSUARIO, 1 ),
-('Jantar romântico', @IPACESSO, @IDUSUARIO, 1 ),
-('Almoço em família', @IPACESSO, @IDUSUARIO, 1 ),
-('Comemoração especial', @IPACESSO, @IDUSUARIO, 1 ),
-('Descontrair', @IPACESSO, @IDUSUARIO, 1 ),
-('Happy hour', @IPACESSO, @IDUSUARIO, 1 ),
-('Despedida de solteiro(a)', @IPACESSO, @IDUSUARIO, 1 ),
-('Evento corporativo', @IPACESSO, @IDUSUARIO, 1 ),
-('Celebração de formatura', @IPACESSO, @IDUSUARIO, 1 ),
+('Festa de aniversário', @IPACESSO, @IDUSUARIO, 2 ),
+('Reunião de negócios', @IPACESSO, @IDUSUARIO, 2 ),
+('Jantar romântico', @IPACESSO, @IDUSUARIO, 2 ),
+('Almoço em família', @IPACESSO, @IDUSUARIO, 2 ),
+('Comemoração especial', @IPACESSO, @IDUSUARIO, 2 ),
+('Descontrair', @IPACESSO, @IDUSUARIO, 2 ),
+('Happy hour', @IPACESSO, @IDUSUARIO, 2 ),
+('Despedida de solteiro(a)', @IPACESSO, @IDUSUARIO, 2 ),
+('Evento corporativo', @IPACESSO, @IDUSUARIO, 2 ),
+('Celebração de formatura', @IPACESSO, @IDUSUARIO, 2 ),
 ('Reunião de amigos', @IPACESSO, @IDUSUARIO, 1 ),
-('Jantar casual', @IPACESSO, @IDUSUARIO, 1 ),
-('Brunch de domingo', @IPACESSO, @IDUSUARIO, 1 ),
-('Evento cultural', @IPACESSO, @IDUSUARIO, 1 );
+('Jantar casual', @IPACESSO, @IDUSUARIO, 2 ),
+('Brunch de domingo', @IPACESSO, @IDUSUARIO, 2 ),
+('Evento cultural', @IPACESSO, @IDUSUARIO, 2 );
 
 
 
