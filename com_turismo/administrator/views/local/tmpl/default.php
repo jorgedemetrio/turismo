@@ -1,52 +1,46 @@
 <?php
 defined('_JEXEC') or die;
 
-// Exibir a lista de locais
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn = $this->escape($this->state->get('list.direction'));
 ?>
-<h1><?php echo JText::_('COM_TURISMO_LISTA_DE_LOCAIS'); ?></h1>
-<form method="get">
-    <label for="filter_name"><?php echo JText::_('COM_TURISMO_FILTRO_NOME'); ?>:</label>
-    <input type="text" name="filter_name" />
-    
-    <label for="filter_cnpj"><?php echo JText::_('COM_TURISMO_FILTRO_CNPJ'); ?>:</label>
-    <input type="text" name="filter_cnpj" />
-    
-    <label for="filter_cep"><?php echo JText::_('COM_TURISMO_FILTRO_CEP'); ?>:</label>
-    <input type="text" name="filter_cep" />
-    
-    <label for="filter_bairro"><?php echo JText::_('COM_TURISMO_FILTRO_BAIRRO'); ?>:</label>
-    <input type="text" name="filter_bairro" />
-    
-    <input type="submit" value="<?php echo JText::_('COM_TURISMO_BUSCAR'); ?>" />
+
+<form action="<?php echo JRoute::_('index.php?option=com_turismo&view=locals'); ?>" method="post" name="adminForm" id="adminForm">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th width="1%"><?php echo JText::_('COM_TURISMO_LOCALS_HEADING_ID'); ?></th>
+                <th width="20%"><?php echo JText::_('COM_TURISMO_LOCALS_HEADING_NAME'); ?></th>
+                <th width="10%"><?php echo JText::_('COM_TURISMO_LOCALS_HEADING_HIGHLIGHT'); ?></th>
+                <th width="10%"><?php echo JText::_('COM_TURISMO_LOCALS_HEADING_STATUS'); ?></th>
+                <th width="1%"><?php echo JText::_('COM_TURISMO_LOCALS_HEADING_ACTIONS'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->items as $i => $item) : ?>
+                <tr>
+                    <td><?php echo $item->id; ?></td>
+                    <td><?php echo $item->nome; ?></td>
+                    <td>
+                        <input type="number" name="highlight[<?php echo $item->id; ?>]" value="<?php echo $item->highlight; ?>" min="0" max="9">
+                    </td>
+                    <td>
+                        <select name="status[<?php echo $item->id; ?>]">
+                            <option value="APROVADO" <?php echo $item->status == 'APROVADO' ? 'selected' : ''; ?>>Aprovado</option>
+                            <option value="REPROVADO" <?php echo $item->status == 'REPROVADO' ? 'selected' : ''; ?>>Reprovado</option>
+                            <option value="REMOVIDO" <?php echo $item->status == 'REMOVIDO' ? 'selected' : ''; ?>>Removido</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="submit" name="task" value="local.changeHighlight"><?php echo JText::_('COM_TURISMO_UPDATE_HIGHLIGHT'); ?></button>
+                        <button type="submit" name="task" value="local.changeStatus"><?php echo JText::_('COM_TURISMO_UPDATE_STATUS'); ?></button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <input type="hidden" name="task" value="">
+    <input type="hidden" name="boxchecked" value="0">
+    <?php echo JHtml::_('form.token'); ?>
 </form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th><?php echo JText::_('COM_TURISMO_ID'); ?></th>
-            <th><?php echo JText::_('COM_TURISMO_NOME'); ?></th>
-            <th><?php echo JText::_('COM_TURISMO_CNPJ'); ?></th>
-            <th><?php echo JText::_('COM_TURISMO_DATA_CRIACAO'); ?></th>
-            <th><?php echo JText::_('COM_TURISMO_ACOES'); ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($this->items as $item): ?>
-        <tr>
-            <td><?php echo $item->id; ?></td>
-            <td><?php echo $item->nome; ?></td>
-            <td><?php echo $item->cnpj; ?></td>
-            <td><?php echo $item->data_criacao; ?></td>
-            <td>
-                <a href="<?php echo JRoute::_('index.php?option=com_turismo&task=local.edit&id=' . $item->id); ?>"><?php echo JText::_('COM_TURISMO_EDITAR'); ?></a>
-                <a href="<?php echo JRoute::_('index.php?option=com_turismo&task=local.delete&id=' . $item->id); ?>"><?php echo JText::_('COM_TURISMO_REMOVER'); ?></a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-
-<!-- Paginação -->
-<div>
-    <?php echo $this->pagination->getPagesLinks(); ?>
-</div>
