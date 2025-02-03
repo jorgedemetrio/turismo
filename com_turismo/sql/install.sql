@@ -451,7 +451,9 @@ CREATE TABLE IF NOT EXISTS `#__turismo_mensagens` (
 CREATE TABLE IF NOT EXISTS `#__turismo_ceps` (
     `cep` VARCHAR(9) NOT NULL,
     `id_cidade` INT(11) NOT NULL,
-    `endereco` VARCHAR(255),
+    `endereco` VARCHAR(255) NOT NULL,
+    `bairro` VARCHAR(255) NOT NULL,
+
     `latitude` DECIMAL(10,8),
     `longitude` DECIMAL(11,8),
     PRIMARY KEY (`cep`),

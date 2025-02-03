@@ -15,13 +15,33 @@ class TurismoModelEncontros extends AdminModel
         return parent::getItem($pk);
     }
 
-    public function getItems($order = 'created DESC')
+    public function getItems($data, $order = 'created DESC')
     {
         $query = $this->_db->getQuery(true);
-        $query->select('e.id, e.nome, e.titulo, e.created, u.name AS creator_name')
+        $query->select('e.id, e.titulo, e.created, e.modified, u.name AS creator_name, u2.name AS modifier_name, `ip_criador`, `ip_alterador`, `ip_proxy_criador`, `ip_proxy_alterador`,`status`,`acessos`')
               ->from($this->getTable()->getTableName() . ' AS e')
               ->join('LEFT', '#__users AS u ON u.id = e.created_by')
+              ->join('LEFT', '#__users AS u ON u2.id = e.modified_by')
               ->order($this->_db->quoteName($order));
+
+       if ( empty($data['titulo']) && trim($data['titulo']) != '') {
+            $query->where('upper(' . $this->_quoteName('titulo') . ') LIKE ' . strtoupper( trim($this->_db->quote($data['titulo']) . '%')));
+        }
+        if ( empty($data['created']) && trim($data['created']) != '') {
+            $query->where( $this->_quoteName('created')  . ' = ' .  $this->_db->quote($data['created']));
+        }
+        if ( empty($data['modified']) && trim($data['modified']) != '') {
+            $query->where( $this->_quoteName('created') . ' = ' . $this->_db->quote($data['created']));
+        }
+        if ( empty($data['creator_name']) && trim($data['creator_name']) != '') {
+            $query->where('upper(' . $this->_quoteName('u.name') . ') LIKE ' . strtoupper( trim($this->_db->quote($data['creator_name']) . '%')));
+        }
+        if ( empty($data['modifier_name']) && trim($data['modifier_name']) != '') {
+            $query->where('upper(' . $this->_quoteName('u2.name') . ') LIKE ' . strtoupper( trim($this->_db->quote($data['modifier_name']) . '%')));
+        }
+
+
+
         $this->_db->setQuery($query);
         return $this->_db->loadObjectList();
     }
@@ -40,7 +60,7 @@ class TurismoModelEncontros extends AdminModel
     public function save($data)
     {
         // Validação mínima dos campos
-        if (empty($data['nome']) || empty($data['titulo'])) {
+        if ( empty($data['titulo'])) {
             $this->setError(Text::_('COM_TURISMO_ENCONTROS_ERROR_VALIDATION'));
             return false;
         }
