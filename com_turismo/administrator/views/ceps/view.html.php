@@ -10,6 +10,12 @@ class TurismoViewCeps extends HtmlView
     public function display($tpl = null)
     {
         $this->items = $this->get('Items');
+        // Adicionando botões do JToolBar
+        JToolBarHelper::title(Text::_('COM_TURISMO_CEPS_TITLE'), 'ceps');
+        JToolBarHelper::addNew('ceps.add');
+        JToolBarHelper::editList('ceps.edit');
+        JToolBarHelper::deleteList('', 'ceps.delete');
+        
         parent::display($tpl);
     }
 }

@@ -28,18 +28,13 @@
     </update>
 
     <files folder="site">
-        <folder>forms</folder>
-        <folder>language</folder>
-        <folder>layouts</folder>
-        <folder>src</folder>
-        <folder>tmpl</folder>
         <folder>models</folder>
         <folder>controllers</folder>
         <folder>views</folder>
+        <folder>language</folder>
     </files>
 
-    <media destination="com_turismo" folder="media">
-        <filename>joomla.asset.json</filename>
+    <media destination="com_turismo" folder="media/com_turismo">
         <folder>css</folder>
         <folder>js</folder>
         <folder>images</folder>
@@ -63,15 +58,10 @@
         <files folder="administrator">
             <filename>access.xml</filename>
             <filename>config.xml</filename>
-            <folder>forms</folder>
-            <folder>language</folder>
-            <folder>layouts</folder>
-            <folder>services</folder>
             <folder>sql</folder>
-            <folder>src</folder>
-            <folder>tmpl</folder>
             <folder>models</folder>
             <folder>controllers</folder>
+            <folder>language</folder>
             <folder>views</folder>
             <filename>access.xml</filename>
             <filename>config.xml</filename>
@@ -87,45 +77,11 @@
         </languages>
     </administration>
 
-    <config>
-        <fields name="params">
-            <fieldset name="component">
-                <field
-                    name="google_maps_key"
-                    type="text"
-                    label="COM_TURISMO_CONFIG_GOOGLE_MAPS_KEY_LABEL"
-                    description="COM_TURISMO_CONFIG_GOOGLE_MAPS_KEY_DESC"
-                />
-                </fieldset>
-                <field
-                    name="save_history"
-                    type="radio"
-                    label="JGLOBAL_SAVE_HISTORY_OPTIONS_LABEL"
-                    description="JGLOBAL_SAVE_HISTORY_OPTIONS_DESC"
-                    default="1"
-                    class="btn-group btn-group-yesno"
-                >
-                    <option value="1">JYES</option>
-                    <option value="0">JNO</option>
-                </field>
-                <field
-                    name="history_limit"
-                    type="text"
-                    label="JGLOBAL_HISTORY_LIMIT_OPTIONS_LABEL"
-                    description="JGLOBAL_HISTORY_LIMIT_OPTIONS_DESC"
-                    default="10"
-                    filter="integer"
-                />
-            </fieldset>
-        </fields>
-    </config>
-
     <updateservers>
         <server type="extension" priority="1" name="Turismo Updates">https://www.sobieskiproducoes.com.br/updates/com_turismo.xml</server>
     </updateservers>
 
-    <scriptfile>script.php</scriptfile>
-    
+
     <dependencies>
         <dependency type="platform" name="joomla" version="4.0" />
         <dependency type="package" name="pkg_pt-BR">0</dependency>

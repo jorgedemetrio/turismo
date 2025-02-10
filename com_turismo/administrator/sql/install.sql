@@ -138,9 +138,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_horario_funcionamento` (
     `created_by` INT(11) NOT NULL,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `modified_by` INT(11),
-   
     FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
-
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     PRIMARY KEY (`id`)
@@ -188,10 +186,10 @@ CREATE TABLE IF NOT EXISTS `#__turismo_evento` (
     `created_by` INT(11) NOT NULL,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `modified_by` INT(11),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
     FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -207,7 +205,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_cozinha` (
     `ordering` INT(11) NOT NULL DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NOT NULL,
-    PRIMARY KEY (`id_tipo_cozinha`, `id_local`)
+    PRIMARY KEY (`id_tipo_cozinha`, `id_local`),
     FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_tipo_cozinha`) REFERENCES `#__turismo_tipo_cozinha`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
@@ -231,11 +229,11 @@ CREATE TABLE IF NOT EXISTS `#__turismo_email` (
     `created_by` INT(11) NOT NULL,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `modified_by` INT(11),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
     FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_user`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -258,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_telefone` (
     `created_by` INT(11) NOT NULL,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `modified_by` INT(11),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
     FOREIGN KEY (`id_cidade`) REFERENCES `#__turismo_cidades`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
@@ -443,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_mensagens` (
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_destinatario`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`createid_mensagem_respostad_by`) REFERENCES `#__turismo_mensagens`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`id_encontro`) REFERENCES `#__turismo_encontros`(`id`) ON DELETE CASCADE
+    FOREIGN KEY (`id_encontro`) REFERENCES `#__turismo_encontros`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -499,8 +497,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_encontros` (
     
     `status` ENUM('ATIVO', 'REPROVADO', 'NOVO', 'REMOVIDO') NOT NULL DEFAULT 'NOVO',
     `acessos` INT(11) DEFAULT 0,
-    `media_avaliacoes` DECIMAL(3,2) DEFAULT 0,
-    `ordering` INT(11) NOT NULL DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NOT NULL,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -1054,4 +1050,4 @@ INSERT INTO `#__turismo_tipo_cozinha` (`nome`, `ip_criador`, `created_by`, `orde
 ('Etíope', @IPACESSO, @IDUSUARIO, 2 ),
 ('Queniana', @IPACESSO, @IDUSUARIO, 2 ),
 ('Ugandense', @IPACESSO, @IDUSUARIO, 2 ),
-('Ruandesa', '127.0.0.1', 1);
+('Ruandesa', @IPACESSO, @IDUSUARIO, 2);
