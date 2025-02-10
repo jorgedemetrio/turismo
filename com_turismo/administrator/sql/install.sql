@@ -25,10 +25,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_tipo_local` (
     FOREIGN KEY (`catid`) REFERENCES `#__categories`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-
--- Criação da tabela de tipos de locais
+-- Criação da tabela de tipos de cozinha
 CREATE TABLE IF NOT EXISTS `#__turismo_tipo_cozinha` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(250) NOT NULL,
@@ -46,8 +43,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_tipo_cozinha` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
--- Criação da tabela de tipos de locais
+-- Criação da tabela de bom para
 CREATE TABLE IF NOT EXISTS `#__turismo_bom_para` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(250) NOT NULL,
@@ -67,7 +63,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_bom_para` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 -- Criação da tabela de locais
 CREATE TABLE IF NOT EXISTS `#__turismo_local` (
     `id` CHAR(36) NOT NULL,
@@ -85,7 +80,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_local` (
     `bairro` VARCHAR(250) NOT NULL,
     `complemento` VARCHAR(250),
     `faixa_preco` DECIMAL(10,2),
-    `horarios_funcionamento` TEXT, -- <-- Arrumar isso
     `descricao` TEXT,
     `ip_criador` VARCHAR(45) NOT NULL,
     `ip_alterador` VARCHAR(45),
@@ -107,12 +101,10 @@ CREATE TABLE IF NOT EXISTS `#__turismo_local` (
     FOREIGN KEY (`cidade_id`) REFERENCES `#__turismo_cidades`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
--- Criação da tabela de tipos de locais
+-- Criação da tabela de horários de funcionamento
 CREATE TABLE IF NOT EXISTS `#__turismo_horario_funcionamento` (
     `id` INT(11) NOT NULL,
     `id_local` CHAR(36) NOT NULL,
-
     `abre_feriados` TINYINT(1) DEFAULT 0,
     `abre_domingo` VARCHAR(5) NOT NULL,
     `abre_segunda` VARCHAR(5) NOT NULL,
@@ -121,7 +113,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_horario_funcionamento` (
     `abre_quinta` VARCHAR(5) NOT NULL,
     `abre_sexta` VARCHAR(5) NOT NULL,
     `abre_sabado` VARCHAR(5) NOT NULL,
-
     `fecha_domingo` VARCHAR(5) NOT NULL,
     `fecha_segunda` VARCHAR(5) NOT NULL,
     `fecha_terca` VARCHAR(5) NOT NULL,
@@ -129,7 +120,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_horario_funcionamento` (
     `fecha_quinta` VARCHAR(5) NOT NULL,
     `fecha_sexta` VARCHAR(5) NOT NULL,
     `fecha_sabado` VARCHAR(5) NOT NULL,
-
     `ip_criador` VARCHAR(45) NOT NULL,
     `ip_alterador` VARCHAR(45),
     `ip_proxy_criador` VARCHAR(45),
@@ -144,35 +134,25 @@ CREATE TABLE IF NOT EXISTS `#__turismo_horario_funcionamento` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-
-
-
-
--- Criação da tabela de tipos de locais
+-- Criação da tabela de locais e bom para
 CREATE TABLE IF NOT EXISTS `#__turismo_local_bom_para` (
     `id_bom_para` INT(11) NOT NULL,
     `id_local` CHAR(36) NOT NULL,
-    
     `ip_criador` VARCHAR(45) NOT NULL,
     `ip_proxy_criador` VARCHAR(45),
     `ordering` INT(11) NOT NULL DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NOT NULL,
-
     FOREIGN KEY (`id_bom_para`) REFERENCES `#__turismo_bom_para`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     PRIMARY KEY (`id_bom_para`, `id_local`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
 -- Criação da tabela de eventos
 CREATE TABLE IF NOT EXISTS `#__turismo_evento` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `id_local` CHAR(36) ,
+    `id_local` CHAR(36),
     `incio` DATETIME NOT NULL,
     `fim` DATETIME,
     `valor_meia` DECIMAL(10,2),
@@ -192,14 +172,10 @@ CREATE TABLE IF NOT EXISTS `#__turismo_evento` (
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-
-
 -- Criação da tabela de cozinha para bares, restaurantes e afins
 CREATE TABLE IF NOT EXISTS `#__turismo_cozinha` (
     `id_tipo_cozinha` INT(11),
-    `id_local` CHAR(36) ,
+    `id_local` CHAR(36),
     `ip_criador` VARCHAR(45) NOT NULL,
     `ip_proxy_criador` VARCHAR(45),
     `ordering` INT(11) NOT NULL DEFAULT 0,
@@ -211,12 +187,10 @@ CREATE TABLE IF NOT EXISTS `#__turismo_cozinha` (
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
 -- Criação da tabela de emails
 CREATE TABLE IF NOT EXISTS `#__turismo_email` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `id_local` CHAR(36) ,
+    `id_local` CHAR(36),
     `email` VARCHAR(255) NOT NULL,
     `nome` VARCHAR(255) NOT NULL,
     `id_user` INT(11) NULL,
@@ -236,11 +210,10 @@ CREATE TABLE IF NOT EXISTS `#__turismo_email` (
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 -- Criação da tabela de telefones
 CREATE TABLE IF NOT EXISTS `#__turismo_telefone` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `id_local` CHAR(36) ,
+    `id_local` CHAR(36),
 
     `ddd` VARCHAR(3),
     `telefone` VARCHAR(255) NOT NULL,
@@ -263,7 +236,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_telefone` (
     FOREIGN KEY (`id_user`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 -- Criação da tabela de quartos
 CREATE TABLE IF NOT EXISTS `#__turismo_quartos` (
@@ -384,7 +356,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_log_buscas` (
     `user_id` INT(11) NOT NULL,
     `busca` VARCHAR(255) NOT NULL,
 
-
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NOT NULL,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -399,7 +370,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_log_buscas` (
 CREATE TABLE IF NOT EXISTS `#__turismo_local_user` (
     `local_id` CHAR(36) NOT NULL,
     `user_id` INT(11) NOT NULL,
-
 
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NOT NULL,
@@ -429,14 +399,12 @@ CREATE TABLE IF NOT EXISTS `#__turismo_mensagens` (
     `ip` VARCHAR(45) NOT NULL,
     `ip_proxy` VARCHAR(45),
 
-
     `state` TINYINT(3) NOT NULL DEFAULT 1,
     `ordering` INT(11) NOT NULL DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NULL,
-    
-    PRIMARY KEY (`id`),
 
+    PRIMARY KEY (`id`),
 
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_destinatario`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
@@ -465,51 +433,36 @@ CREATE TABLE IF NOT EXISTS `#__turismo_badwords` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-
-
-
-
 -- -----------------------------------------------------
 -- Table `#__turismo_encontros`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `#__turismo_encontros` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `id_local` BIGINT NOT NULL,
-
-	`titulo` VARCHAR(255) NOT NULL,
-	`alias` VARCHAR(255) NOT NULL,
-    `descricao` TEXT  NOT NULL,
-	`id_bom_para` INT(11) NOT NULL,
-
-    
+    `titulo` VARCHAR(255) NOT NULL,
+    `alias` VARCHAR(255) NOT NULL,
+    `descricao` TEXT NOT NULL,
+    `id_bom_para` INT(11) NOT NULL,
     `data_hora` DATETIME NOT NULL,
     `limite_participantes` INT DEFAULT 0,
-	`publico` TINYINT(1) DEFAULT 1,
+    `publico` TINYINT(1) DEFAULT 1,
     `destaque` TINYINT(1) DEFAULT 0,
-
-	
     `ip_criador` VARCHAR(45) NOT NULL,
     `ip_alterador` VARCHAR(45),
     `ip_proxy_criador` VARCHAR(45),
     `ip_proxy_alterador` VARCHAR(45),
-    
     `status` ENUM('ATIVO', 'REPROVADO', 'NOVO', 'REMOVIDO') NOT NULL DEFAULT 'NOVO',
     `acessos` INT(11) DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` INT(11) NOT NULL,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `modified_by` INT(11),
-
     PRIMARY KEY (`id`),
-	FOREIGN KEY (`id_bom_para`) REFERENCES `#__turismo_bom_para`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_locais`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_bom_para`) REFERENCES `#__turismo_bom_para`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
-) ENGINE = InnoDB;
-
-
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `#__turismo_encontros_confirmados` (
     `id_encontro` INT(11) NOT NULL,
@@ -517,20 +470,13 @@ CREATE TABLE IF NOT EXISTS `#__turismo_encontros_confirmados` (
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `ip_criador` VARCHAR(45) NOT NULL,
     `ip_proxy_criador` VARCHAR(45),
-
-    PRIMARY KEY (`id_user`,`id_encontro`),
+    PRIMARY KEY (`id_user`, `id_encontro`),
     FOREIGN KEY (`id_user`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_encontro`) REFERENCES `#__turismo_encontros`(`id`) ON DELETE CASCADE
-) ENGINE = InnoDB;
+) ENGINE=InnoDB;
 
-
-
-
-
-
-SELECT max(id) INTO @IDUSUARIO FROM #__users limit 1;
+SELECT max(id) INTO @IDUSUARIO FROM #__users LIMIT 1;
 SELECT SUBSTRING_INDEX(USER(), '@', -1) INTO @IPACESSO;
-
 
 -- Inserir recursos de quartos
 INSERT INTO `#__turismo_recursos_quarto` (`nome`) VALUES
@@ -591,8 +537,6 @@ INSERT INTO `#__turismo_estados` (`uf`, `nome`) VALUES
 ('SP', 'São Paulo'),
 ('SE', 'Sergipe'),
 ('TO', 'Tocantins');
-
-
 
 -- Inserção de cidades do Paraná (PR)
 INSERT INTO `#__turismo_cidades` (`uf`, `nome`) VALUES
@@ -1051,3 +995,12 @@ INSERT INTO `#__turismo_tipo_cozinha` (`nome`, `ip_criador`, `created_by`, `orde
 ('Queniana', @IPACESSO, @IDUSUARIO, 2 ),
 ('Ugandense', @IPACESSO, @IDUSUARIO, 2 ),
 ('Ruandesa', @IPACESSO, @IDUSUARIO, 2);
+
+
+
+
+
+
+
+
+
