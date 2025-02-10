@@ -440,7 +440,7 @@ CREATE TABLE IF NOT EXISTS `#__turismo_mensagens` (
 
     FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_destinatario`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`createid_mensagem_respostad_by`) REFERENCES `#__turismo_mensagens`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_mensagem_resposta`) REFERENCES `#__turismo_mensagens`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_encontro`) REFERENCES `#__turismo_encontros`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
