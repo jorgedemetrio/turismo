@@ -382,6 +382,40 @@ CREATE TABLE IF NOT EXISTS `#__turismo_local_user` (
     FOREIGN KEY (`user_id`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- -----------------------------------------------------
+-- Table `#__turismo_encontros`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `#__turismo_encontros` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `local_id` CHAR(36) NOT NULL,
+    `titulo` VARCHAR(255) NOT NULL,
+    `alias` VARCHAR(255) NOT NULL,
+    `descricao` TEXT NOT NULL,
+    `id_bom_para` INT(11) NOT NULL,
+    `data_hora` DATETIME NOT NULL,
+    `limite_participantes` INT DEFAULT 0,
+    `publico` TINYINT(1) DEFAULT 1,
+    `destaque` TINYINT(1) DEFAULT 0,
+    `ip_criador` VARCHAR(45) NOT NULL,
+    `ip_alterador` VARCHAR(45),
+    `ip_proxy_criador` VARCHAR(45),
+    `ip_proxy_alterador` VARCHAR(45),
+    `status` ENUM('ATIVO', 'REPROVADO', 'NOVO', 'REMOVIDO') NOT NULL DEFAULT 'NOVO',
+    `acessos` INT(11) DEFAULT 0,
+    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by` INT(11) NOT NULL,
+    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `modified_by` INT(11),
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`id_bom_para`) REFERENCES `#__turismo_bom_para`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`local_id`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+
+
 -- Criação da tabela de mensagens
 CREATE TABLE IF NOT EXISTS `#__turismo_mensagens` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -432,37 +466,6 @@ CREATE TABLE IF NOT EXISTS `#__turismo_badwords` (
     `palavra` VARCHAR(100) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- -----------------------------------------------------
--- Table `#__turismo_encontros`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `#__turismo_encontros` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `id_local` BIGINT NOT NULL,
-    `titulo` VARCHAR(255) NOT NULL,
-    `alias` VARCHAR(255) NOT NULL,
-    `descricao` TEXT NOT NULL,
-    `id_bom_para` INT(11) NOT NULL,
-    `data_hora` DATETIME NOT NULL,
-    `limite_participantes` INT DEFAULT 0,
-    `publico` TINYINT(1) DEFAULT 1,
-    `destaque` TINYINT(1) DEFAULT 0,
-    `ip_criador` VARCHAR(45) NOT NULL,
-    `ip_alterador` VARCHAR(45),
-    `ip_proxy_criador` VARCHAR(45),
-    `ip_proxy_alterador` VARCHAR(45),
-    `status` ENUM('ATIVO', 'REPROVADO', 'NOVO', 'REMOVIDO') NOT NULL DEFAULT 'NOVO',
-    `acessos` INT(11) DEFAULT 0,
-    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `created_by` INT(11) NOT NULL,
-    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `modified_by` INT(11),
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`id_bom_para`) REFERENCES `#__turismo_bom_para`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`id_local`) REFERENCES `#__turismo_local`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`created_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`modified_by`) REFERENCES `#__users`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `#__turismo_encontros_confirmados` (
     `id_encontro` INT(11) NOT NULL,
